@@ -1,6 +1,6 @@
 ﻿# PowerManager Software - Windows Application Manager via WinGet
 
-![.NET 8](https://img.shields.io/badge/.NET-8-512BD4?logo=dotnet)
+![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)
 ![WinUI 3](https://img.shields.io/badge/WinUI-3-0078D4?logo=windows)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
@@ -8,15 +8,23 @@ Modern Windows application (WinUI 3) to install, uninstall, and update software 
 
 ## 🚀 Features
 
-- 🎯 **Smart Splash Screen** - Loading with WinGet verification at startup
-- 📦 **Application Catalog** - 40+ popular pre-configured applications
-- ⚡ **Bulk Installation** - Select multiple apps and install them with one click
-- 🗑️ **Bulk Uninstallation** - Manage your installed apps easily
-- 🔄 **Automatic Updates** - Detection and installation of available updates
-- 📊 **Execution Queue** - Real-time tracking of operation progress
-- 📜 **Complete History** - Detailed logs of all operations
-- 🔍 **Search and Filters** - Quickly find applications by name or category
-- ⚙️ **Status Cache** - Fast detection of installed apps without rerunning WinGet
+### ✅ Implemented (v0.1.0)
+
+- 📦 **Basic Package Management** - View installed packages via WinGet
+- 📊 **Execution Queue** - Sequential task execution with status tracking
+- ⚡ **Install/Uninstall Operations** - Queue-based package management
+- 📝 **Comprehensive Logging** - Detailed operation logs with [LoggerMessage] attributes
+- 🔄 **Async Operations** - Non-blocking UI with proper threading
+
+### 🚧 Planned Features
+
+- 🎯 **Smart Splash Screen** - Loading with WinGet verification at startup (planned)
+- 📦 **Application Catalog** - Pre-configured application catalog with 40+ popular apps (planned)
+- 🗑️ **Bulk Operations** - Multi-select installation/uninstallation (planned)
+- 🔄 **Automatic Updates** - Detection and installation of available updates (planned)
+- 📜 **Complete History** - Persistent operation history (planned)
+- 🔍 **Search and Filters** - Find applications by name or category (planned)
+- ⚙️ **Status Cache** - Fast detection of installed apps without rerunning WinGet (planned)
 
 ## 📋 Prerequisites
 
@@ -31,37 +39,17 @@ Modern Windows application (WinUI 3) to install, uninstall, and update software 
 - **Visual Studio 2026** (or Visual Studio 2022 17.8+) with:
   - "Universal Windows Platform development" workload
   - ".NET Desktop Development" workload
-  - Windows App SDK 1.8+
-- **.NET 10 SDK** (recommended) or **.NET 8 SDK** (minimum)
+  - Windows App SDK 1.8.260101001
+- **.NET 10 SDK** (required)
 
 ## 🛠️ Installation
 
-### 📥 From Installer (Recommended)
-
-**Inno Setup Installer** (Windows 7+)
-
-1. Download `PowerManagerSetup-x.x.x-x64.exe` from [Releases](https://github.com/shuntps/PowerManager-Software/releases)
-2. Run the installer
-3. Follow the setup wizard
-4. The app will be available in your Start Menu
-
-**MSIX Package** (Windows 10 1809+)
-
-1. Download `.msixbundle` from [Releases](https://github.com/shuntps/PowerManager-Software/releases)
-2. Install the certificate (see [MSIX_QUICKSTART.md](MSIX_QUICKSTART.md))
-3. Double-click to install
-4. Find it in Windows Apps
-
-> 💡 **See [installer/README.md](installer/README.md) for complete installer documentation**
-> 📦 **Inno Setup Guide**: [installer/QUICKSTART.md](installer/QUICKSTART.md)
-> 📦 **MSIX Guide**: [installer/msix/README.md](installer/msix/README.md)
-
-### 🔨 From Source
+### � From Source (Only Option for v0.1.0)
 
 ```powershell
 # Clone the repository
-git clone https://github.com/shuntps/PowerManager-Software.git
-cd PowerManager-Software/src/PowerManager_Software
+git clone https://github.com/shuntps/PowerManager_Software.git
+cd PowerManager_Software/src
 
 # Restore packages
 dotnet restore
@@ -69,81 +57,82 @@ dotnet restore
 # Build (defaults to x64 platform)
 dotnet build -c Release
 
-# Run
+# Run the UI project
+cd PowerManager.UI
 dotnet run
 ```
 
-**Note**: The project targets `net8.0-windows10.0.19041.0` (compatible with .NET 8, 9, and 10) and defaults to x64 platform.
+**Note**: The project targets `net10.0-windows10.0.19041.0` (Windows App SDK 1.8.260101001) and defaults to x64 platform.
 
 ## 📖 Usage
 
-### 0. First Launch
-
-- The application automatically checks for WinGet presence
-- If WinGet is not installed, a message guides you to installation
-- The catalog is loaded and the installation status of apps is detected
+### Current Implementation (v0.1.0)
 
 ### 1. Catalog Page
 
-- Browse the 40+ available applications
-- Use the search bar or category filters
-- Check the applications you want to install
-- Click **"Install Selection"**
+- View packages (basic implementation)
+- Select packages for installation
+- Queue operations for execution
 
-### 2. Execution Queue
+### 2. Queue Page
 
-- Follow the progress of each installation in real-time
-- View detailed logs
-- Cancel an operation if necessary
+- Monitor queued operations
+- View operation status (Pending, Running, Completed, Failed, Canceled)
+- Track sequential execution progress
+- Cancel pending operations
 
-### 3. History
+### Planned Features
 
-- View the complete history of all operations
-- Export logs to text file
-- Analyze installation failures
+- **Splash Screen**: WinGet verification at startup
+- **Full Catalog**: 40+ pre-configured applications with search/filter
+- **History Page**: Persistent operation logs with export functionality
+- **Status Cache**: Fast installation detection with TTL
 
 ## 🏗️ Architecture
 
 ```
-PowerManager_Software/
-├── Models/          # Data models
-│   ├── AppInfo.cs           # Application representation
-│   ├── Operation.cs         # WinGet operation (Install/Uninstall/Update)
-│   ├── OperationType.cs     # Operation type enum (Install/Uninstall/Update)
-│   ├── OperationStatus.cs   # Operation status (Pending/Running/Completed/Failed)
-│   └── HistoryEntry.cs      # History entry
-├── Services/        # Business services
-│   ├── WingetService.cs         # WinGet command execution
-│   ├── CatalogService.cs        # Application catalog management (default + custom)
-│   ├── QueueService.cs          # Sequential operation queue execution
-│   ├── HistoryService.cs        # Operation history management
-│   └── AppStatusCacheService.cs # Installation status cache (5-min TTL)
-├── ViewModels/      # MVVM ViewModels (CommunityToolkit.Mvvm)
-│   ├── MainViewModel.cs     # Main window ViewModel
-│   ├── SplashViewModel.cs   # Splash screen ViewModel
-│   ├── CatalogViewModel.cs  # Catalog ViewModel with filtering
-│   ├── QueueViewModel.cs    # Execution queue ViewModel
-│   └── HistoryViewModel.cs  # History ViewModel
-├── Views/           # WinUI 3 Pages (XAML)
-│   ├── MainWindow.xaml      # Main window with NavigationView
-│   ├── SplashPage.xaml      # Loading page with WinGet verification
-│   ├── CatalogPage.xaml     # Application catalog with search/filter
-│   ├── QueuePage.xaml       # Execution queue with real-time progress
-│   └── HistoryPage.xaml     # History page with export
-├── Converters/      # XAML Value Converters
-│   └── ValueConverters.cs   # BoolToVisibility, InverseBool, etc.
-└── Assets/          # Resources (icons, images)
+PowerManager/
+├── PowerManager.Core/          # Core business logic layer
+│   ├── Models/                 # Data models
+│   │   ├── Package.cs          # Package representation
+│   │   └── QueueItem.cs        # Queue item with status and logs
+│   ├── Enums/                  # Enumerations
+│   │   └── QueueItemStatus.cs  # Queue status (Pending/Running/Completed/Failed/Canceled)
+│   └── Services/               # Business services
+│       ├── IWingetService.cs           # WinGet command interface
+│       ├── IQueueService.cs            # Queue management interface
+│       ├── IUiDispatcher.cs            # UI thread marshaling interface
+│       └── Implementations/
+│           ├── WingetService.cs        # WinGet process execution
+│           └── QueueService.cs         # Sequential queue processing
+├── PowerManager.UI/            # WinUI 3 presentation layer
+│   ├── ViewModels/             # MVVM ViewModels (CommunityToolkit.Mvvm)
+│   │   ├── CatalogViewModel.cs # Catalog management
+│   │   ├── QueueViewModel.cs   # Queue monitoring
+│   │   └── MainViewModel.cs    # Main window coordination
+│   ├── Views/                  # WinUI 3 Pages (XAML)
+│   │   ├── CatalogPage.xaml    # Package catalog
+│   │   └── QueuePage.xaml      # Execution queue
+│   ├── Services/
+│   │   └── UiDispatcher.cs     # UI thread marshaling implementation
+│   ├── App.xaml.cs             # DI container configuration
+│   ├── MainWindow.xaml         # Main window with NavigationView
+│   └── Program.cs              # Custom entry point (DISABLE_XAML_GENERATED_MAIN)
+└── PowerManager.Tests/         # MSTest test project
+    ├── MSTestSettings.cs       # Test configuration
+    └── PowerManager.Tests.csproj # MSTest 4.0.1 project
 ```
 
 ### Technologies Used
 
-- **Framework**: .NET 8+ (C# 12) - Compatible with .NET 8, 9, and 10
-- **UI**: WinUI 3 (Windows App SDK 1.8)
-- **Pattern**: Strict MVVM
+- **Framework**: .NET 10 (C# 13)
+- **UI**: WinUI 3 (Windows App SDK 1.8.260101001)
+- **Pattern**: Strict MVVM with source generators
 - **MVVM Toolkit**: CommunityToolkit.Mvvm 8.3.2
-- **Logging**: Microsoft.Extensions.Logging
+- **Testing**: MSTest 4.0.1 (NOT xUnit)
+- **Logging**: Microsoft.Extensions.Logging with [LoggerMessage] attributes
 - **DI**: Microsoft.Extensions.DependencyInjection
-- **YAML**: YamlDotNet 16.2.1
+- **YAML**: YamlDotNet 16.2.1 (planned for catalog persistence)
 
 ### Design Principles
 
@@ -157,37 +146,29 @@ PowerManager_Software/
 
 ## ⚙️ Configuration
 
-### Adding Applications to the Catalog
+### Current Implementation (v0.1.0)
 
-The application uses a **dual catalog system**:
+The application currently operates directly with WinGet commands. Configuration features are planned for future releases.
+
+### Planned: Dual Catalog System
 
 #### Default Catalog (Built-in Apps)
 
-Edit `Services/CatalogService.cs` in the `CreateDefaultCatalog()` method:
+Will contain 40+ pre-configured popular applications, auto-generated and saved to:
 
-```csharp
-private static List<AppInfo> CreateDefaultCatalog()
-{
-    return
-    [
-        new AppInfo
-        {
-            Id = "YourApp.YourApp",        // WinGet ID (required)
-            Name = "Your Application",      // Display name (required)
-            Category = "Category",          // Category for filtering (required)
-            Description = "Description",    // Description (optional)
-            Tags = ["tag1", "tag2"]        // Tags for search (optional)
-        },
-        // ... more apps
-    ];
-}
 ```
-
-**Note**: The default catalog is auto-generated and saved to `%LocalAppData%\PowerManager Software\catalog_default.yaml` on every launch.
+%LocalAppData%\PowerManager Software\catalog_default.yaml
+```
 
 #### Custom Catalog (User Additions)
 
-For user-specific apps, the application creates `%LocalAppData%\PowerManager Software\catalog_custom.yaml` which persists across updates. Both catalogs merge at runtime.
+User-specific applications will persist in:
+
+```
+%LocalAppData%\PowerManager Software\catalog_custom.yaml
+```
+
+Both catalogs will merge at runtime for a unified experience.
 
 To find the WinGet ID of an application:
 
@@ -195,44 +176,7 @@ To find the WinGet ID of an application:
 winget search "app name"
 ```
 
-## � Building Installers
-
-PowerManager Software provides two installer formats:
-
-### Inno Setup (Recommended)
-
-Create a traditional Windows .exe installer:
-
-```powershell
-# Install Inno Setup
-winget install JRSoftware.InnoSetup
-
-# Build the installer
-.\installer\scripts\build-inno.ps1
-```
-
-Output: `output/inno/PowerManagerSetup-x.x.x-x64.exe`
-
-### MSIX Package
-
-Create a Microsoft Store compatible package:
-
-```powershell
-# Build MSIX (requires Visual Studio 2026)
-.\installer\scripts\build-msix.ps1
-```
-
-Output: `output/msix/PowerManager_Software_x.x.x.x_x64.msixbundle`
-
-**Complete guides**:
-
-- 📖 [Main Installer Documentation](installer/README.md)
-- ⚡ [Quick Start](installer/QUICKSTART.md)
-- 🔧 [Environment Setup](installer/SETUP_ENVIRONMENT.md)
-- 📦 [Inno Setup Guide](installer/inno/README.md)
-- 📦 [MSIX Guide](installer/msix/README.md)
-
-## �🔧 Troubleshooting
+## 🔧 Troubleshooting
 
 ### WinGet Not Found
 
@@ -251,16 +195,16 @@ winget --version
 
 ### Data Files
 
-Application data is stored in `%LocalAppData%\PowerManager Software\`:
+Application data will be stored in `%LocalAppData%\PowerManager Software\` (not yet implemented in v0.1.0):
 
 ```
-catalog_default.yaml  # Default catalog (auto-generated on startup)
-catalog_custom.yaml   # Custom user additions (preserved)
-status_cache.json     # Installation status cache (5-min TTL)
-history.json          # Operation history
+catalog_default.yaml  # Default catalog (planned)
+catalog_custom.yaml   # Custom user additions (planned)
+status_cache.json     # Installation status cache with 5-min TTL (planned)
+history.json          # Operation history (planned)
 ```
 
-**Note**: Debug logs are currently output to Visual Studio Debug Output window, not files.
+**Current Logging**: All logs are output to Visual Studio Debug Output window using `[LoggerMessage]` attributes. File logging infrastructure is designed to be added without refactoring.
 
 ## ❓ FAQ
 
@@ -274,21 +218,39 @@ A: Some applications require it. PowerManager Software will ask for privilege el
 A: Yes, each operation in the execution queue can be cancelled via the "Cancel" button.
 
 **Q: Are logs automatically cleaned up?**
-A: Logs are currently only available in Visual Studio Debug Output during development. No persistent log files are created.
+A: Currently (v0.1.0), logs are only available in Visual Studio Debug Output during development. Persistent logging is planned for future releases.
 
 **Q: Can I add my own applications to the catalog?**
-A: Yes! For built-in apps, edit `Services/CatalogService.cs` in the `CreateDefaultCatalog()` method. The app also supports `catalog_custom.yaml` for user-specific additions that persist across updates.
+A: Catalog functionality is planned but not yet implemented in v0.1.0. The app currently works directly with WinGet commands.
 
 **Q: How does the status cache work?**
-A: The app caches installation status for 5 minutes to avoid repeated WinGet calls. Click "Refresh Status" to force a re-check.
+A: Status caching is planned for future releases to avoid repeated WinGet calls and improve performance.
 
 ## 🗺️ Roadmap
+
+### Version 0.2 (Next)
+
+- [ ] Splash screen with WinGet verification
+- [ ] Application catalog (40+ pre-configured apps)
+- [ ] Catalog persistence (YAML-based)
+- [ ] Status cache with TTL
+- [ ] History page with persistent logs
+- [ ] Search and filter functionality
+
+### Version 1.0
+
+- [ ] Bulk operations (multi-select)
+- [ ] Automatic update detection
+- [ ] File-based logging
+- [ ] Comprehensive error handling UI
+- [ ] Full test coverage (MSTest)
 
 ### Version 1.1
 
 - [ ] Predefined application packs (Dev Pack, Office Pack, Gaming Pack)
 - [ ] Import/Export configurations (.pmconfig files)
 - [ ] Automatic dark/light mode
+- [ ] Parallel execution (configurable limit)
 
 ### Version 1.2
 
@@ -299,7 +261,6 @@ A: The app caches installation status for 5 minutes to avoid repeated WinGet cal
 ### Version 2.0
 
 - [ ] Automatic PowerManager Software updates
-- [ ] Automatic detection of new app versions
 - [ ] Scheduled installations/updates
 - [ ] Usage statistics
 
@@ -325,7 +286,7 @@ A: The app caches installation status for 5 minutes to avoid repeated WinGet cal
 
 ### Known Issues
 
-Check [GitHub Issues](https://github.com/shuntps/PowerManager-Software/issues) for current bugs and planned work.
+Check [GitHub Issues](https://github.com/shuntps/PowerManager_Software/issues) for current bugs and planned work.
 
 ## 📄 License
 
