@@ -1,0 +1,15 @@
+<Solution>
+  <Project Path="PowerManager.UI/PowerManager.UI.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="PowerManager.Core/PowerManager.Core.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="PowerManager.Tests/PowerManager.Tests.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+</Solution>
