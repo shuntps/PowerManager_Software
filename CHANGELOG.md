@@ -1,3 +1,26 @@
+## [0.3.5] - 2026-02-03
+
+### ⚠️ BREAKING CHANGES
+feat(catalog): implement private YAML catalog with real-time scanning and auto-refresh
+
+### ✨ Features
+- implement private YAML catalog with real-time scanning and auto-refresh
+- add automated versioning system with PowerShell scripts
+
+### 🐛 Bug Fixes
+- upload only ZIP package and document SmartScreen warning
+- improve changelog extraction regex in New-Release.ps1
+- publish self-contained executable in GitHub releases
+
+### ⚡ Performance Improvements
+- enable dotnet cache to skip reinstallation
+- remove duplicate build/test on main branch
+
+### 📚 Documentation
+- clarify conventional commits for infrastructure changes
+- update README with versioning section and enhance copilot instructions
+
+
 ## [0.3.4] - 2026-02-03
 
 ### ⚠️ BREAKING CHANGES
