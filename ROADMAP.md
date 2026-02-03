@@ -44,23 +44,30 @@ PowerManager aims to simplify Windows software management by providing:
 
 ## 🚀 Upcoming Releases
 
-### v0.4.0 - Enhanced Catalog (Next - Q1 2026)
+### v0.4.0 - MSIX Installer & ARM64 Support (Next - Q1 2026)
 
-**Focus:** Expand catalog and improve user experience
+**Focus:** Professional packaging and multi-architecture support
 
 **Success Metrics:**
 
-- 📊 Catalog contains 40+ curated applications
-- ⚡ Catalog load time <500ms with caching
-- 🎯 User can add/remove custom packages via UI
-- 📈 "Update All" reduces update time by 70%
+- 📦 MSIX installer working with self-signed certificate
+- 🖥️ ARM64 builds functional (.msixbundle)
+- ⚡ Installation script automates certificate setup
+- 📊 Expanded catalog with 40+ applications
 
 #### Features
 
-- [ ] **Smart Splash Screen**
-  - WinGet verification on startup
-  - Installation check and auto-repair
-  - Progress indicator during initialization
+- [ ] **MSIX Packaging**
+  - Self-signed certificate for development
+  - `.msixbundle` multi-architecture support
+  - PowerShell installation script (`Install-PowerManager.ps1`)
+  - Automated certificate installation
+  - README.txt in portable ZIP distribution
+
+- [ ] **ARM64 Support**
+  - Native ARM64 builds (experimental/untested)
+  - Single `.msixbundle` for x64 + ARM64
+  - Windows on ARM compatibility
 
 - [ ] **Expanded Catalog (40+ Apps)**
   - Popular browsers (Chrome, Firefox, Edge, Brave, Opera)
@@ -69,16 +76,26 @@ PowerManager aims to simplify Windows software management by providing:
   - Utilities (7zip, WinRAR, VLC, Notepad++, Paint.NET)
   - Productivity (Office 365, LibreOffice, Adobe Reader, Obsidian)
 
+- [ ] **Smart Caching**
+  - Configurable TTL (default 5 minutes)
+  - Cache invalidation options
+  - Background refresh
+
+**Target Release:** March 2026
+
+---
+
+### v0.5.0 - Enhanced Catalog UI (Q2 2026)
+
+**Focus:** Custom catalog management and bulk operations
+
+#### Features
+
 - [ ] **Custom Catalog Management UI**
   - Add packages via search
   - Remove packages from catalog
   - Edit package metadata (name, description, category)
   - Import/Export catalog YAML
-
-- [ ] **Smart Caching**
-  - Configurable TTL (default 5 minutes)
-  - Cache invalidation options
-  - Background refresh
 
 - [ ] **Bulk Update**
   - "Update All" button for outdated packages
@@ -90,11 +107,11 @@ PowerManager aims to simplify Windows software management by providing:
   - Filter by date/status/package
   - Export to CSV
 
-**Target Release:** March 2026
+**Target Release:** May 2026
 
 ---
 
-### v1.0.0 - Production Ready (Q2 2026)
+### v1.0.0 - Production Ready (Q3 2026)
 
 **Focus:** Stability, testing, and error handling
 
@@ -131,11 +148,52 @@ PowerManager aims to simplify Windows software management by providing:
   - Virtualized list views
   - Memory profiling and optimization
 
-**Target Release:** June 2026
+**Target Release:** September 2026
 
 ---
 
-### v1.1.0 - Advanced Features (Q3 2026)
+### v1.1.0 - Advanced Features (Q4 2026)
+
+**Focus:** Power user features and customization
+
+#### Features
+
+- [ ] **Bulk Operations**
+  - Multi-select install/uninstall
+  - Batch operation confirmation dialog
+  - Parallel execution (configurable limit)
+
+- [ ] **Automatic Update Detection**
+  - Background scanning for outdated packages
+  - Notification system
+  - Auto-update scheduling
+
+- [ ] **File-Based Logging**
+  - Rotating log files (daily/weekly)
+  - Configurable log levels
+  - Log viewer in UI
+
+- [ ] **Comprehensive Error Handling**
+  - User-friendly error dialogs
+  - Retry mechanisms
+  - WinGet troubleshooting wizard
+
+- [ ] **Full Test Coverage**
+  - Unit tests for all services (MSTest)
+  - Integration tests for WinGet commands
+  - UI tests for critical workflows
+  - Code coverage >80%
+
+- [ ] **Performance Optimization**
+  - Lazy loading for large catalogs
+  - Virtualized list views
+  - Memory profiling and optimization
+
+**Target Release:** November 2026
+
+---
+
+### v1.5.0 - Power User Features (Q1 2027)
 
 **Focus:** Power user features and customization
 
@@ -169,17 +227,28 @@ PowerManager aims to simplify Windows software management by providing:
   - Filter by package source
   - Custom filter combinations
 
-**Target Release:** September 2026
+**Target Release:** March 2027
 
 ---
 
-### v1.2.0 - Internationalization (Q4 2026)
+### v2.0.0 - Microsoft Store & Code Signing (Q2 2027)
 
-**Focus:** Multi-language support and localization
+**Focus:** Microsoft Store deployment and professional distribution
 
 #### Features
 
-- [ ] **Multi-Language Support**
+- [ ] **Microsoft Store Deployment**
+  - Submit to Microsoft Store
+  - Automatic update distribution
+  - Microsoft-signed MSIX packages
+  - In-app purchase system (optional donations)
+
+- [ ] **Commercial Code Signing**
+  - Extended Validation (EV) certificate
+  - Immediate SmartScreen trust
+  - Enterprise deployment ready
+
+- [ ] **Internationalization**
   - English (default)
   - French
   - Spanish
@@ -201,13 +270,13 @@ PowerManager aims to simplify Windows software management by providing:
   - Search by tags
   - Search history
 
-**Target Release:** December 2026
+**Target Release:** June 2027
 
 ---
 
-### v2.0.0 - Automation & Intelligence (2027)
+### v2.5.0 - Automation & Intelligence (Q4 2027)
 
-**Focus:** Smart automation and self-updating
+**Focus:** Smart automation and advanced features
 
 #### Features
 
@@ -236,7 +305,7 @@ PowerManager aims to simplify Windows software management by providing:
   - Group-based operations
   - Dependency management
 
-**Target Release:** Q2 2027
+**Target Release:** December 2027
 
 ---
 
