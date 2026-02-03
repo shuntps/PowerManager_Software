@@ -152,47 +152,6 @@ PowerManager aims to simplify Windows software management by providing:
 
 ---
 
-### v1.1.0 - Advanced Features (Q4 2026)
-
-**Focus:** Power user features and customization
-
-#### Features
-
-- [ ] **Bulk Operations**
-  - Multi-select install/uninstall
-  - Batch operation confirmation dialog
-  - Parallel execution (configurable limit)
-
-- [ ] **Automatic Update Detection**
-  - Background scanning for outdated packages
-  - Notification system
-  - Auto-update scheduling
-
-- [ ] **File-Based Logging**
-  - Rotating log files (daily/weekly)
-  - Configurable log levels
-  - Log viewer in UI
-
-- [ ] **Comprehensive Error Handling**
-  - User-friendly error dialogs
-  - Retry mechanisms
-  - WinGet troubleshooting wizard
-
-- [ ] **Full Test Coverage**
-  - Unit tests for all services (MSTest)
-  - Integration tests for WinGet commands
-  - UI tests for critical workflows
-  - Code coverage >80%
-
-- [ ] **Performance Optimization**
-  - Lazy loading for large catalogs
-  - Virtualized list views
-  - Memory profiling and optimization
-
-**Target Release:** November 2026
-
----
-
 ### v1.5.0 - Power User Features (Q1 2027)
 
 **Focus:** Power user features and customization

@@ -6,15 +6,29 @@
     Validates the complete MSIX packaging workflow locally before CI/CD deployment.
     Tests: assets, certificate, build, bundle creation, and installation.
 
+.PARAMETER CleanFirst
+    Remove previous test artifacts before starting.
+
+.PARAMETER CertPassword
+    Password for test certificate signing. Defaults to workflow password if not specified.
+    Can also be set via CERT_PASSWORD environment variable.
+
 .EXAMPLE
     .\Test-MsixBuild.ps1
 
 .EXAMPLE
     .\Test-MsixBuild.ps1 -CleanFirst
+
+.EXAMPLE
+    .\Test-MsixBuild.ps1 -CertPassword "MyCustomPassword"
+
+.EXAMPLE
+    $env:CERT_PASSWORD = "MyPassword"; .\Test-MsixBuild.ps1
 #>
 
 param(
-    [switch]$CleanFirst
+    [switch]$CleanFirst,
+    [string]$CertPassword
 )
 
 $ErrorActionPreference = "Stop"
@@ -22,7 +36,12 @@ $ProgressPreference = "SilentlyContinue"
 
 $projectRoot = Split-Path $PSScriptRoot
 $testPublishPath = Join-Path $projectRoot "test-publish"
-$certPassword = "TestPass123!"
+
+# Use parameter > environment variable > default (matches release workflow)
+if (-not $CertPassword) {
+    $CertPassword = if ($env:CERT_PASSWORD) { $env:CERT_PASSWORD } else { "TempPassword123!" }
+}
+$certPassword = $CertPassword
 
 Write-Host ""
 Write-Host "═══════════════════════════════════════════════════════════════════" -ForegroundColor Cyan

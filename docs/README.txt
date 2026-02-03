@@ -54,7 +54,7 @@ Choose the MSIX INSTALLER (PowerManager-vX.X.X-win-multiarch.msixbundle) if you:
   - Want a cleaner installation experience
 
 For MSIX installation instructions, see:
-https://github.com/YourUsername/PowerManager#installation
+https://github.com/shuntps/PowerManager_Software#installation
 
 USAGE
 -----
@@ -68,7 +68,7 @@ using WinGet. Features include:
 - Lightweight and fast (no background services)
 
 For full documentation, visit:
-https://github.com/YourUsername/PowerManager
+https://github.com/shuntps/PowerManager_Software
 
 TROUBLESHOOTING
 ---------------
@@ -89,7 +89,7 @@ A: Some packages require administrator privileges. Right-click
 UPDATES
 -------
 Portable versions do NOT auto-update. Check GitHub releases regularly:
-https://github.com/YourUsername/PowerManager/releases
+https://github.com/shuntps/PowerManager_Software/releases
 
 To update:
 1. Download the latest ZIP
@@ -111,9 +111,9 @@ See LICENSE file in the repository for details.
 
 SUPPORT
 -------
-- GitHub Issues: https://github.com/YourUsername/PowerManager/issues
-- Documentation: https://github.com/YourUsername/PowerManager#readme
+- GitHub Issues: https://github.com/shuntps/PowerManager_Software/issues
+- Documentation: https://github.com/shuntps/PowerManager_Software#readme
 
 ==============================================================================
-PowerManager v0.4.0 | https://github.com/YourUsername/PowerManager
+PowerManager v0.4.0 | https://github.com/shuntps/PowerManager_Software
 ==============================================================================

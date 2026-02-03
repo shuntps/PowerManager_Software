@@ -78,17 +78,38 @@ if (-not $Password) {
     $PasswordConfirm = Read-Host -AsSecureString
 
     # Compare SecureStrings
-    $pwd1 = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
-    $pwd2 = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($PasswordConfirm))
+    $ptr1 = [IntPtr]::Zero
+    $ptr2 = [IntPtr]::Zero
+    try {
+        $ptr1 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password)
+        $ptr2 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($PasswordConfirm)
+        $pwd1 = [Runtime.InteropServices.Marshal]::PtrToStringAuto($ptr1)
+        $pwd2 = [Runtime.InteropServices.Marshal]::PtrToStringAuto($ptr2)
 
-    if ($pwd1 -ne $pwd2) {
-        Write-Error "Passwords do not match"
-        exit 1
+        if ($pwd1 -ne $pwd2) {
+            Write-Error "Passwords do not match"
+            $pwd1 = $null
+            $pwd2 = $null
+            exit 1
+        }
+
+        if ($pwd1.Length -lt 8) {
+            Write-Error "Password must be at least 8 characters"
+            $pwd1 = $null
+            $pwd2 = $null
+            exit 1
+        }
     }
-
-    if ($pwd1.Length -lt 8) {
-        Write-Error "Password must be at least 8 characters"
-        exit 1
+    finally {
+        if ($ptr1 -ne [IntPtr]::Zero) {
+            [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr1)
+        }
+        if ($ptr2 -ne [IntPtr]::Zero) {
+            [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr2)
+        }
+        # Clear plaintext password copies
+        $pwd1 = $null
+        $pwd2 = $null
     }
 }
 
@@ -102,6 +123,7 @@ try {
         -KeyUsage DigitalSignature `
         -FriendlyName "PowerManager Code Signing" `
         -CertStoreLocation "Cert:\CurrentUser\My" `
+        -KeyExportPolicy Exportable `
         -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}") `
         -NotAfter (Get-Date).AddYears($ValidYears)
 

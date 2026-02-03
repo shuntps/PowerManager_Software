@@ -67,6 +67,8 @@ foreach ($asset in $assets) {
     $bitmap.Dispose()
     $font.Dispose()
     $textBrush.Dispose()
+    $brush.Dispose()
+    $format.Dispose()
 
     Write-Host "  ✓ Created $($asset.Name) ($($asset.Width)x$($asset.Height))" -ForegroundColor Green
 }

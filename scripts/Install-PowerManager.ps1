@@ -72,7 +72,7 @@ function Find-MsixFile {
     }
 
     # Search current directory for .msix or .msixbundle
-    $msixFiles = Get-ChildItem -Path $PSScriptRoot -Filter "*.msix*" | Where-Object { $_.Name -match '\.(msix|msixbundle)$' }
+    $msixFiles = Get-ChildItem -Path (Get-Location).Path -Filter "*.msix*" | Where-Object { $_.Name -match '\.(msix|msixbundle)$' }
 
     if ($msixFiles.Count -eq 0) {
         throw "No .msix or .msixbundle file found in current directory. Use -MsixPath parameter."
@@ -132,11 +132,11 @@ function Extract-CertificateFromMsix {
 function Install-Certificate {
     param([System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate)
 
-    Write-Host "`n🔐 Installing certificate to Trusted Root..." -ForegroundColor Cyan
+    Write-Host "`n🔐 Installing certificate to TrustedPeople..." -ForegroundColor Cyan
 
     try {
         $store = New-Object System.Security.Cryptography.X509Certificates.X509Store(
-            [System.Security.Cryptography.X509Certificates.StoreName]::Root,
+            [System.Security.Cryptography.X509Certificates.StoreName]::TrustedPeople,
             [System.Security.Cryptography.X509Certificates.StoreLocation]::LocalMachine
         )
 
@@ -174,7 +174,7 @@ function Install-MsixPackage {
     catch {
         if ($_.Exception.Message -match "already installed") {
             Write-Host "   ℹ️  PowerManager is already installed" -ForegroundColor Yellow
-            Write-Host "   💡 Use Windows Settings > Apps to uninstall first, or use -Force" -ForegroundColor Gray
+            Write-Host "   💡 Uninstall via Windows Settings > Apps, or use Add-AppxPackage -ForceUpdateFromAnyVersion" -ForegroundColor Gray
         }
         else {
             Write-Error "Failed to install MSIX package: $_"
