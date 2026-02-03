@@ -124,7 +124,7 @@ jobs:
             --self-contained true `
             --no-restore `
             -p:PublishSingleFile=false `
-            -p:PublishReadyToRun=true `
+            -p:PublishReadyToRun=false `
             -o publish/win-x64
 
           Write-Host "Build artifacts:" -ForegroundColor Green
