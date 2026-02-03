@@ -13,11 +13,24 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
 		<!-- MSIX Packaging Configuration -->
-		<WindowsPackageType Condition="'$(GenerateAppxPackageOnBuild)' == 'true'">MSIX</WindowsPackageType>
-		<WindowsPackageType Condition="'$(GenerateAppxPackageOnBuild)' != 'true'">None</WindowsPackageType>
-		<AppxPackage Condition="'$(GenerateAppxPackageOnBuild)' == 'true'">true</AppxPackage>
 		<AppxPackageSigningEnabled Condition="'$(PackageCertificateKeyFile)' != ''">true</AppxPackageSigningEnabled>
 	</PropertyGroup>
+
+	<Choose>
+		<When Condition="'$(GenerateAppxPackageOnBuild)' == 'true'">
+			<PropertyGroup>
+				<WindowsPackageType>MSIX</WindowsPackageType>
+				<AppxPackage>true</AppxPackage>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<WindowsPackageType>None</WindowsPackageType>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
+
+	<PropertyGroup>
 	<ItemGroup>
 	  <Page Remove="SplashWindow.xaml" />
 	</ItemGroup>

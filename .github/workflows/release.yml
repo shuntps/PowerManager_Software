@@ -254,8 +254,8 @@ jobs:
           # Create mapping file for makeappx (avoid here-string due to YAML escaping issues)
           $mappingFile = "publish/msix/mapping.txt"
           "[Files]" | Out-File -FilePath $mappingFile -Encoding utf8
-          ('{0}" "PowerManagerSoftware_{1}_x64.msix"' -f $x64Msix.FullName, $version) | Out-File -FilePath $mappingFile -Encoding utf8 -Append
-          ('{0}" "PowerManagerSoftware_{1}_ARM64.msix"' -f $arm64Msix.FullName, $version) | Out-File -FilePath $mappingFile -Encoding utf8 -Append
+          ('"{0}" "PowerManagerSoftware_{1}_x64.msix"' -f $x64Msix.FullName, $version) | Out-File -FilePath $mappingFile -Encoding utf8 -Append
+          ('"{0}" "PowerManagerSoftware_{1}_ARM64.msix"' -f $arm64Msix.FullName, $version) | Out-File -FilePath $mappingFile -Encoding utf8 -Append
 
           Write-Host "`nMapping file contents:" -ForegroundColor Gray
           Get-Content $mappingFile | ForEach-Object { Write-Host "  $_" -ForegroundColor DarkGray }

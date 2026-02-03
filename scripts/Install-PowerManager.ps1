@@ -5,7 +5,7 @@
 .DESCRIPTION
     This script automates the installation of PowerManager by:
     1. Extracting the embedded self-signed certificate from the .msix
-    2. Installing the certificate to Trusted Root Certification Authorities
+    2. Installing the certificate to TrustedPeople store
     3. Installing the .msix package
     4. Optionally launching the application
 
