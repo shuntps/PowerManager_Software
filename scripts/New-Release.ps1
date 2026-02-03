@@ -124,9 +124,9 @@ $releaseArgs = @(
 )
 
 # Add artifacts if publish path exists
-# Only upload distribution packages (.zip, .msix), NOT individual .exe files
+# Only upload distribution packages (.zip, .msixbundle), NOT individual .exe or .msix files
 if (Test-Path $PublishPath) {
-    $artifacts = Get-ChildItem $PublishPath -Recurse -File -Include *.zip, *.msix
+    $artifacts = Get-ChildItem $PublishPath -Recurse -File -Include *.zip, *.msixbundle
     if ($artifacts.Count -gt 0) {
         Write-Host "Uploading $($artifacts.Count) distribution package(s)..." -ForegroundColor Cyan
         $artifacts | ForEach-Object {

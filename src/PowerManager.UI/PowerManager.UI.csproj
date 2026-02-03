@@ -1,23 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
-		<Platforms>x64;AnyCPU</Platforms>
+		<Platforms>x64;ARM64;AnyCPU</Platforms>
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 		<OutputType>WinExe</OutputType>
 		<UseWinUI>true</UseWinUI>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-		<WindowsPackageType>None</WindowsPackageType>
 		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+		<!-- MSIX Packaging Configuration -->
+		<AppxPackageSigningEnabled Condition="'$(PackageCertificateKeyFile)' != ''">true</AppxPackageSigningEnabled>
 	</PropertyGroup>
+
+	<Choose>
+		<When Condition="'$(GenerateAppxPackageOnBuild)' == 'true'">
+			<PropertyGroup>
+				<WindowsPackageType>MSIX</WindowsPackageType>
+				<AppxPackage>true</AppxPackage>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<WindowsPackageType>None</WindowsPackageType>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
+
 	<ItemGroup>
 	  <Page Remove="SplashWindow.xaml" />
 	</ItemGroup>
-
-
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7463" />
