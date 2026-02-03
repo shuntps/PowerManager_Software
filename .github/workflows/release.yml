@@ -152,8 +152,10 @@ jobs:
             -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}") `
             -NotAfter (Get-Date).AddYears(2)
 
-          # Export to .pfx with temporary password
-          $password = ConvertTo-SecureString "${{ secrets.CERT_PASSWORD || 'TempPassword123!' }}" -AsPlainText -Force
+          # Export to .pfx with temporary password (from secret or default)
+          $certPwd = "${{ secrets.CERT_PASSWORD }}"
+          if ([string]::IsNullOrEmpty($certPwd)) { $certPwd = "TempPassword123!" }
+          $password = ConvertTo-SecureString $certPwd -AsPlainText -Force
           $pfxPath = "src/PowerManager.UI/PowerManager_TemporaryKey.pfx"
 
           Export-PfxCertificate -Cert $cert -FilePath $pfxPath -Password $password | Out-Null
@@ -168,7 +170,8 @@ jobs:
           Write-Host "Building MSIX packages for multiple architectures..." -ForegroundColor Cyan
 
           $version = "${{ steps.version.outputs.version }}"
-          $certPassword = "${{ secrets.CERT_PASSWORD || 'TempPassword123!' }}"
+          $certPassword = "${{ secrets.CERT_PASSWORD }}"
+          if ([string]::IsNullOrEmpty($certPassword)) { $certPassword = "TempPassword123!" }
 
           # Build x64 MSIX
           Write-Host "`n📦 Building x64 MSIX..." -ForegroundColor Yellow
@@ -276,7 +279,9 @@ jobs:
             exit 1
           }
 
-          $signtoolArgs = @("sign", "/fd", "SHA256", "/a", "/f", "src/PowerManager.UI/PowerManager_TemporaryKey.pfx", "/p", "${{ secrets.CERT_PASSWORD || 'TempPassword123!' }}", $bundlePath)
+          $certPwd = "${{ secrets.CERT_PASSWORD }}"
+          if ([string]::IsNullOrEmpty($certPwd)) { $certPwd = "TempPassword123!" }
+          $signtoolArgs = @("sign", "/fd", "SHA256", "/a", "/f", "src/PowerManager.UI/PowerManager_TemporaryKey.pfx", "/p", $certPwd, $bundlePath)
           & $signtoolPath @signtoolArgs
 
           if ($LASTEXITCODE -ne 0) {
