@@ -11,6 +11,7 @@ public partial class QueueService(ILogger<QueueService> logger, IWingetService w
 
     public event EventHandler<QueueItem>? ItemStatusChanged;
     public event EventHandler<QueueItem>? ItemAdded;
+    public event EventHandler<QueueItem>? ItemCompleted;
 
     public void Enqueue(QueueItem item)
     {

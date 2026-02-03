@@ -10,4 +10,5 @@ public interface IQueueService
     IReadOnlyList<QueueItem> GetQueue();
     event EventHandler<QueueItem> ItemStatusChanged;
     event EventHandler<QueueItem> ItemAdded;
+    event EventHandler<QueueItem> ItemCompleted; // Fired when install/uninstall succeeds
 }

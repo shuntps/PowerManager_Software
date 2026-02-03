@@ -4,32 +4,197 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
 
     <Grid>
-        <StackPanel Spacing="10" Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Loading Overlay -->
+        <Grid Grid.RowSpan="3" 
+              Canvas.ZIndex="100"
+              Background="{ThemeResource LayerFillColorDefaultBrush}"
+              Visibility="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20" MaxWidth="400">
+                <FontIcon Glyph="&#xE946;" FontSize="64" Foreground="{ThemeResource AccentFillColorDefaultBrush}"/>
+                <TextBlock Text="Scanning Catalog" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                <TextBlock Text="{x:Bind ViewModel.ScanStatus, Mode=OneWay}" 
+                           HorizontalAlignment="Center" 
+                           Opacity="0.8"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"/>
+                <ProgressBar Maximum="100" 
+                             Value="{x:Bind ViewModel.ScanProgress, Mode=OneWay}" 
+                             Width="300"
+                             Height="4"/>
+                <TextBlock Text="{x:Bind ViewModel.ScanProgressText, Mode=OneWay}" 
+                           HorizontalAlignment="Center" 
+                           FontSize="12"
+                           Opacity="0.6"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Padding="20,20,20,10">
             <TextBlock Text="Software Catalog" Style="{ThemeResource TitleTextBlockStyle}"/>
-            <Button Content="Refresh" Command="{x:Bind ViewModel.LoadPackagesCommand}"/>
-            
-            <ListView ItemsSource="{x:Bind ViewModel.Packages, Mode=OneWay}">
+            <TextBlock Text="Select applications to install, uninstall, or update" 
+                       Opacity="0.7" 
+                       Margin="0,5,0,0"/>
+        </StackPanel>
+
+        <!-- Filters and Actions -->
+        <Grid Grid.Row="1" Padding="20,0,20,10" RowSpacing="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Search and Category Filter -->
+            <Grid Grid.Row="0" ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" 
+                         PlaceholderText="Search in catalog..." 
+                         Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <ComboBox Grid.Column="1" 
+                          Header="Category"
+                          ItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}"
+                          SelectedItem="{x:Bind ViewModel.SelectedCategory, Mode=TwoWay}"
+                          HorizontalAlignment="Stretch"/>
+
+                <Button Grid.Column="2" 
+                        Content="Refresh" 
+                        Command="{x:Bind ViewModel.LoadCatalogCommand}"
+                        VerticalAlignment="Bottom"/>
+            </Grid>
+
+            <!-- Action Buttons -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
+                <Button Command="{x:Bind ViewModel.InstallSelectedCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <FontIcon Glyph="&#xE896;"/>
+                        <TextBlock Text="Install Selected"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Command="{x:Bind ViewModel.UninstallSelectedCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <FontIcon Glyph="&#xE74D;"/>
+                        <TextBlock Text="Uninstall Selected"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Command="{x:Bind ViewModel.UpdateSelectedCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <FontIcon Glyph="&#xE117;"/>
+                        <TextBlock Text="Update Selected"/>
+                    </StackPanel>
+                </Button>
+
+                <TextBlock Text="{x:Bind ViewModel.SelectedCount, Mode=OneWay}" 
+                           VerticalAlignment="Center"
+                           Margin="10,0,0,0"
+                           Opacity="0.7"/>
+                <TextBlock Text="selected" 
+                           VerticalAlignment="Center"
+                           Opacity="0.7"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Package List -->
+        <Grid Grid.Row="2" Padding="20,0,20,20">
+            <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" 
+                          Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"/>
+
+            <ListView ItemsSource="{x:Bind ViewModel.Packages, Mode=OneWay}"
+                      SelectionMode="Multiple"
+                      SelectionChanged="ListView_SelectionChanged"
+                      x:Name="PackageListView"
+                      Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                         <Grid Padding="10">
-                             <Grid.ColumnDefinitions>
-                                 <ColumnDefinition Width="*"/>
-                                 <ColumnDefinition Width="Auto"/>
-                             </Grid.ColumnDefinitions>
-                             <StackPanel>
-                                 <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                                 <TextBlock Text="{Binding Id}" Opacity="0.6"/>
-                             </StackPanel>
-                             <Button Grid.Column="1" Content="Install" 
-                                     Click="InstallButton_Click"
-                                     Tag="{Binding}"/>
-                         </Grid>
+                        <Grid Padding="10,5" ColumnSpacing="15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Checkbox handled by SelectionMode="Multiple" -->
+
+                            <!-- Package Info -->
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14"/>
+                                <TextBlock Text="{Binding Id}" FontSize="11" Opacity="0.6"/>
+                                <TextBlock FontSize="11" Opacity="0.8" Margin="0,2,0,0"
+                                           Visibility="{Binding InstalledVersion, Converter={StaticResource NotEmptyToVisibilityConverter}}">
+                                    <Run Text="Installed: "/>
+                                    <Run Text="{Binding InstalledVersion}" FontWeight="SemiBold"/>
+                                </TextBlock>
+                                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,5,0,0">
+                                    <Border Background="{ThemeResource AccentFillColorDefaultBrush}" 
+                                            Padding="6,2" 
+                                            CornerRadius="3">
+                                        <TextBlock Text="{Binding Category}" 
+                                                   FontSize="10" 
+                                                   Foreground="White"/>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Status Badge -->
+                            <StackPanel Grid.Column="2" VerticalAlignment="Center" Spacing="5">
+                                <!-- Update Available Badge (Orange) -->
+                                <Border Background="#FFA500" 
+                                        Padding="10,5" 
+                                        CornerRadius="4"
+                                        Visibility="{Binding UpdateAvailable, Converter={StaticResource UpdateAvailableToVisibilityConverter}}">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <FontIcon Glyph="&#xE117;" FontSize="12" Foreground="White"/>
+                                        <TextBlock FontSize="12" Foreground="White">
+                                            <Run Text="Update:"/>
+                                            <Run Text="{Binding AvailableVersion}" FontWeight="Bold"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Installed Badge (Green) - Only if no update -->
+                                <Border Background="{ThemeResource SystemFillColorSuccessBrush}" 
+                                        Padding="10,5" 
+                                        CornerRadius="4"
+                                        Visibility="{Binding Converter={StaticResource InstalledNoUpdateConverter}}">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <FontIcon Glyph="&#xE73E;" FontSize="12" Foreground="White"/>
+                                        <TextBlock Text="Installed" FontSize="12" Foreground="White"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Not Installed Badge (Gray) -->
+                                <Border Background="#6C757D" 
+                                        Padding="10,5" 
+                                        CornerRadius="4"
+                                        Visibility="{Binding IsInstalled, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <FontIcon Glyph="&#xE711;" FontSize="12" Foreground="White"/>
+                                        <TextBlock Text="Not Installed" FontSize="12" Foreground="White"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        </StackPanel>
+        </Grid>
     </Grid>
 </Page>

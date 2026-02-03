@@ -10,23 +10,32 @@ Modern Windows application (WinUI 3) to install, uninstall, and update software 
 
 ## 🚀 Features
 
-### ✅ Implemented (v0.1.0)
+### ✅ Implemented (v0.3.0)
 
+#### Core Features (v0.1.0)
 - 📦 **Basic Package Management** - View installed packages via WinGet
 - 📊 **Execution Queue** - Sequential task execution with status tracking
 - ⚡ **Install/Uninstall Operations** - Queue-based package management
 - 📝 **Comprehensive Logging** - Detailed operation logs with [LoggerMessage] attributes
 - 🔄 **Async Operations** - Non-blocking UI with proper threading
 
+#### New in v0.3.0
+- 📦 **Private YAML Catalog** - Persistent package catalog with 5 default apps
+- 🔍 **Search & Filters** - Real-time search and category filtering
+- 🎨 **Status Badges** - Visual indicators (Installed/Update Available/Not Installed)
+- ⚡ **Optimized Scanning** - Targeted per-package scanning with progress overlay
+- 💾 **Catalog Persistence** - Dual YAML system (default + custom catalogs)
+- 📊 **Installation Detection** - Automatic status detection with LastChecked timestamp
+- 🌐 **Source Detection** - Distinguish between winget and msstore packages
+- 🎯 **Smart Parsing** - Robust WinGet output parsing for all package formats
+
 ### 🚧 Planned Features
 
-- 🎯 **Smart Splash Screen** - Loading with WinGet verification at startup (planned)
-- 📦 **Application Catalog** - Pre-configured application catalog with 40+ popular apps (planned)
-- 🗑️ **Bulk Operations** - Multi-select installation/uninstallation (planned)
-- 🔄 **Automatic Updates** - Detection and installation of available updates (planned)
-- 📜 **Complete History** - Persistent operation history (planned)
-- 🔍 **Search and Filters** - Find applications by name or category (planned)
-- ⚙️ **Status Cache** - Fast detection of installed apps without rerunning WinGet (planned)
+- 🎯 **Smart Splash Screen** - Loading with WinGet verification at startup
+- 📦 **Expanded Catalog** - Pre-configured catalog with 40+ popular apps
+- 🗑️ **Bulk Operations** - Multi-select installation/uninstallation
+- 🔄 **Automatic Updates** - One-click update all outdated packages
+- 📜 **Complete History** - Persistent operation history with export
 
 ## 📋 Prerequisites
 
@@ -68,13 +77,19 @@ dotnet run
 
 ## 📖 Usage
 
-### Current Implementation (v0.1.0)
+### Current Implementation (v0.3.0)
 
 ### 1. Catalog Page
 
-- View packages (basic implementation)
-- Select packages for installation
-- Queue operations for execution
+- **Browse Packages** - View 5 default apps (Chrome, Discord, VS Code, 7zip, Notepad++)
+- **Real-time Search** - Filter packages by name or ID
+- **Category Filter** - Browse by category (All/Browsers/Development/Communication/Utilities)
+- **Status Badges** - Visual indicators showing installation status:
+  - 🟢 **Green Badge**: Installed (current version)
+  - 🟠 **Orange Badge**: Update Available (shows new version)
+  - ⚫ **Gray Badge**: Not Installed
+- **Multi-select** - Choose multiple packages for batch operations
+- **Auto-refresh** - Packages scanned on page load with progress overlay
 
 ### 2. Queue Page
 
@@ -83,12 +98,18 @@ dotnet run
 - Track sequential execution progress
 - Cancel pending operations
 
+### 3. Data Persistence
+
+Application data is stored in `%LocalAppData%\PowerManager Software\`:
+- **catalog_default.yaml** - Built-in package definitions (auto-generated)
+- **catalog_custom.yaml** - User-added packages (planned)
+- **LastChecked** - Each package tracks last scan timestamp
+
 ### Planned Features
 
 - **Splash Screen**: WinGet verification at startup
-- **Full Catalog**: 40+ pre-configured applications with search/filter
+- **Expanded Catalog**: 40+ pre-configured applications
 - **History Page**: Persistent operation logs with export functionality
-- **Status Cache**: Fast installation detection with TTL
 
 ## 🏗️ Architecture
 
@@ -134,7 +155,7 @@ PowerManager/
 - **Testing**: MSTest 4.0.1 (NOT xUnit)
 - **Logging**: Microsoft.Extensions.Logging with [LoggerMessage] attributes
 - **DI**: Microsoft.Extensions.DependencyInjection
-- **YAML**: YamlDotNet 16.2.1 (planned for catalog persistence)
+- **YAML**: YamlDotNet 16.2.1 (for catalog persistence)
 
 ### Design Principles
 
@@ -148,21 +169,26 @@ PowerManager/
 
 ## ⚙️ Configuration
 
-### Current Implementation (v0.1.0)
+### Dual Catalog System (v0.3.0)
 
-The application currently operates directly with WinGet commands. Configuration features are planned for future releases.
-
-### Planned: Dual Catalog System
+PowerManager uses a dual YAML catalog system for flexibility:
 
 #### Default Catalog (Built-in Apps)
 
-Will contain 40+ pre-configured popular applications, auto-generated and saved to:
+Contains 5 pre-configured popular applications, auto-generated on first launch and saved to:
 
 ```
 %LocalAppData%\PowerManager Software\catalog_default.yaml
 ```
 
-#### Custom Catalog (User Additions)
+**Default packages:**
+- Google Chrome (Google.Chrome)
+- Discord (Discord.Discord)
+- Visual Studio Code (Microsoft.VisualStudioCode)
+- 7-Zip (7zip.7zip)
+- Notepad++ (Notepad++.Notepad++)
+
+#### Custom Catalog (User Additions) - Planned
 
 User-specific applications will persist in:
 
@@ -170,7 +196,7 @@ User-specific applications will persist in:
 %LocalAppData%\PowerManager Software\catalog_custom.yaml
 ```
 
-Both catalogs will merge at runtime for a unified experience.
+Both catalogs merge at runtime for a unified experience.
 
 To find the WinGet ID of an application:
 
@@ -197,16 +223,30 @@ winget --version
 
 ### Data Files
 
-Application data will be stored in `%LocalAppData%\PowerManager Software\` (not yet implemented in v0.1.0):
+Application data is stored in `%LocalAppData%\PowerManager Software\`:
 
 ```
-catalog_default.yaml  # Default catalog (planned)
-catalog_custom.yaml   # Custom user additions (planned)
-status_cache.json     # Installation status cache with 5-min TTL (planned)
-history.json          # Operation history (planned)
+catalog_default.yaml  # ✅ Default catalog with 5 apps (implemented v0.3.0)
+catalog_custom.yaml   # 🚧 Custom user additions (planned v0.4.0)
 ```
 
-**Current Logging**: All logs are output to Visual Studio Debug Output window using `[LoggerMessage]` attributes. File logging infrastructure is designed to be added without refactoring.
+**File Structure (catalog_default.yaml):**
+```yaml
+Packages:
+- Id: Google.Chrome
+  Name: Google Chrome
+  Source: winget
+  Category: Browsers
+  Description: Fast and secure web browser
+  Tags: [browser, popular, google]
+  IsInstalled: true
+  InstalledVersion: 144.0.7559.110
+  AvailableVersion: 144.0.7559.110
+  UpdateAvailable: false
+  LastChecked: 2026-02-03T12:00:00Z
+```
+
+**Logging:** All logs are output to Visual Studio Debug Output window using `[LoggerMessage]` attributes. File-based logging is planned for v1.0.0.
 
 ## ❓ FAQ
 
@@ -220,13 +260,16 @@ A: Some applications require it. PowerManager Software will ask for privilege el
 A: Yes, each operation in the execution queue can be cancelled via the "Cancel" button.
 
 **Q: Are logs automatically cleaned up?**
-A: Currently (v0.1.0), logs are only available in Visual Studio Debug Output during development. Persistent logging is planned for future releases.
+A: Currently (v0.3.0), logs are only available in Visual Studio Debug Output during development. Persistent file logging is planned for future releases.
 
 **Q: Can I add my own applications to the catalog?**
-A: Catalog functionality is planned but not yet implemented in v0.1.0. The app currently works directly with WinGet commands.
+A: Custom catalog functionality is planned but not yet implemented. Currently, the app manages 5 default packages. You can manually edit `catalog_default.yaml` to add more.
 
-**Q: How does the status cache work?**
-A: Status caching is planned for future releases to avoid repeated WinGet calls and improve performance.
+**Q: How does the status detection work?**
+A: Each package is scanned via WinGet on catalog page load. Results are cached in the YAML catalog with a `LastChecked` timestamp. The scan runs in the background with a progress overlay showing real-time status. v0.4.0 will add smart TTL-based caching to minimize WinGet calls.
+
+**Q: What package sources are supported?**
+A: v0.3.0 detects both `winget` (default) and `msstore` (Microsoft Store) sources automatically from WinGet output.
 
 ## � Versioning & Releases
 
@@ -270,43 +313,18 @@ Each release includes:
 - Installer packages (.msix)
 - Full changelog and release notes
 
-## �🗺️ Roadmap
+## 🗺️ Roadmap
 
-### Version 0.3 (Next)
+See our detailed [ROADMAP.md](../ROADMAP.md) for planned features and release timeline.
 
-- [ ] Splash screen with WinGet verification
-- [ ] Application catalog (5+ pre-configured apps)
-- [ ] Catalog persistence (YAML-based)
-- [ ] Status cache with TTL
-- [ ] History page with persistent logs
-- [ ] Search and filter functionality
+**Next Release (v0.4.0):**
+- Splash screen with WinGet verification
+- Expand catalog to 40+ popular apps
+- Custom catalog management UI
+- Smart caching with TTL
+- History page with persistent logs
 
-### Version 1.0
-
-- [ ] Bulk operations (multi-select)
-- [ ] Automatic update detection
-- [ ] File-based logging
-- [ ] Comprehensive error handling UI
-- [ ] Full test coverage (MSTest)
-
-### Version 1.1
-
-- [ ] Predefined application packs (Dev Pack, Office Pack, Gaming Pack)
-- [ ] Import/Export configurations (.pmconfig files)
-- [ ] Automatic dark/light mode
-- [ ] Parallel execution (configurable limit)
-
-### Version 1.2
-
-- [ ] Multi-language support (EN, FR, ES, DE)
-- [ ] System notifications for completed operations
-- [ ] Custom icons for applications
-
-### Version 2.0
-
-- [ ] Automatic PowerManager Software updates
-- [ ] Scheduled installations/updates
-- [ ] Usage statistics
+**Long-term Vision:** See the [full roadmap](../ROADMAP.md) for v1.0+ features including bulk operations, automation, multi-language support, and more.
 
 ## 🤝 Contributing
 

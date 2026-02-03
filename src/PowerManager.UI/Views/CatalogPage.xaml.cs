@@ -2,7 +2,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using PowerManager.UI.ViewModels;
 using PowerManager.Core.Models;
-using System;
+using System.Linq;
 
 namespace PowerManager.UI.Views;
 
@@ -14,13 +14,24 @@ public sealed partial class CatalogPage : Page
     {
         this.InitializeComponent();
         ViewModel = ((App)App.Current).Services.GetRequiredService<CatalogViewModel>();
+        this.DataContext = ViewModel;
     }
 
-    private void InstallButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private async void Page_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        if (sender is Microsoft.UI.Xaml.Controls.Button button && button.Tag is Package package)
+        await ViewModel.LoadCatalogCommand.ExecuteAsync(null);
+    }
+
+    private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ListView listView)
         {
-            ViewModel.InstallPackageCommand.Execute(package);
+            ViewModel.SelectedPackages.Clear();
+            foreach (var item in listView.SelectedItems.OfType<Package>())
+            {
+                ViewModel.SelectedPackages.Add(item);
+            }
+            ViewModel.SelectedCount = ViewModel.SelectedPackages.Count;
         }
     }
 }
