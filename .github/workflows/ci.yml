@@ -18,8 +18,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.0.x"
-          cache: true
-          cache-dependency-path: "**/*.csproj"
 
       - name: Restore dependencies
         run: dotnet restore src/PowerManager.slnx
