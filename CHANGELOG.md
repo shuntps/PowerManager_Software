@@ -1,3 +1,37 @@
+## [0.4.0] - 2026-02-03
+
+### ⚠️ BREAKING CHANGES
+feat(catalog): implement private YAML catalog with real-time scanning and auto-refresh
+
+### ✨ Features
+- use secure random password for MSIX signing
+- add PowerShell installation scripts
+- add MSIX packaging configuration
+- implement private YAML catalog with real-time scanning and auto-refresh
+- add automated versioning system with PowerShell scripts
+
+### 🐛 Bug Fixes
+- resolve XML syntax error and improve security
+- resolve build errors and security issues
+- add MSIX packaging configuration and build workflow
+- upload only ZIP package and document SmartScreen warning
+- improve changelog extraction regex in New-Release.ps1
+- publish self-contained executable in GitHub releases
+
+### ⚡ Performance Improvements
+- enable dotnet cache to skip reinstallation
+- remove duplicate build/test on main branch
+
+### ♻️ Code Refactoring
+- address code review nitpicks
+- improve secret handling pattern in release workflow
+- improve project configuration and workflow patterns
+
+### 📚 Documentation
+- clarify conventional commits for infrastructure changes
+- update README with versioning section and enhance copilot instructions
+
+
 ## [0.3.5] - 2026-02-03
 
 ### ⚠️ BREAKING CHANGES
