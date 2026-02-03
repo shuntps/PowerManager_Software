@@ -1,0 +1,97 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release:
+    name: Build and Release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Calculate next version
+        id: version
+        shell: pwsh
+        run: |
+          $version = .\scripts\Get-NextVersion.ps1
+          echo "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          echo "NEXT_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Check if release needed
+        id: check
+        shell: pwsh
+        run: |
+          $currentVersion = (Get-Content VERSION.txt).Trim()
+          $nextVersion = "${{ steps.version.outputs.version }}"
+
+          if ($currentVersion -eq $nextVersion) {
+            echo "skip=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+            Write-Host "No release needed (no version-affecting commits)" -ForegroundColor Yellow
+          } else {
+            echo "skip=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+            Write-Host "Release will be created: $currentVersion -> $nextVersion" -ForegroundColor Green
+          }
+
+      - name: Update VERSION.txt
+        if: steps.check.outputs.skip == 'false'
+        shell: pwsh
+        run: |
+          "${{ steps.version.outputs.version }}" | Out-File VERSION.txt -NoNewline -Encoding utf8
+
+      - name: Update CHANGELOG.md
+        if: steps.check.outputs.skip == 'false'
+        shell: pwsh
+        run: |
+          .\scripts\Update-Changelog.ps1 -Version "${{ steps.version.outputs.version }}"
+
+      - name: Commit version files
+        if: steps.check.outputs.skip == 'false'
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add VERSION.txt CHANGELOG.md
+          git commit -m "chore(release): ${{ steps.version.outputs.version }} [skip ci]"
+          git push
+
+      - name: Restore dependencies
+        if: steps.check.outputs.skip == 'false'
+        run: dotnet restore src/PowerManager.slnx
+
+      - name: Build solution
+        if: steps.check.outputs.skip == 'false'
+        run: dotnet build src/PowerManager.slnx -c Release --no-restore
+
+      - name: Run tests
+        if: steps.check.outputs.skip == 'false'
+        run: dotnet test src/PowerManager.slnx -c Release --no-build --verbosity normal
+
+      - name: Publish application
+        if: steps.check.outputs.skip == 'false'
+        run: dotnet publish src/PowerManager.UI/PowerManager.UI.csproj -c Release -r win-x64 --self-contained false -o publish/
+
+      - name: Create GitHub Release
+        if: steps.check.outputs.skip == 'false'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          .\scripts\New-Release.ps1 -Version "${{ steps.version.outputs.version }}"

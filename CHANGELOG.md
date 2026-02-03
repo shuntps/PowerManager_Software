@@ -1,0 +1,34 @@
+# Changelog
+
+All notable changes to PowerManager will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.0] - 2026-02-03
+
+### ✨ Features
+
+- **Core**: Initial release of PowerManager
+- **UI**: WinUI 3 NavigationView shell with MVVM pattern
+- **Catalog**: Basic package browsing functionality
+- **Queue**: Queue management system for package operations
+- **WinGet**: WinGet service integration for package management
+- **DI**: Dependency injection container setup
+- **Logging**: Compile-time logging with `[LoggerMessage]` attributes
+
+### 🏗️ Architecture
+
+- .NET 10 (C# 13) with WinUI 3 (Windows App SDK 1.8)
+- MVVM Toolkit 8.3.2 with source generators
+- MSTest 4.0.1 for unit testing
+- UI thread marshaling via `IUiDispatcher`
+- Service-based architecture with interface abstraction
+
+### 📦 Components
+
+- **PowerManager.Core**: Business logic layer (services, models, enums)
+- **PowerManager.UI**: WinUI 3 presentation layer (views, view models)
+- **PowerManager.Tests**: MSTest test suite
+
+[0.1.0]: https://github.com/shuntps/PowerManager_Software/releases/tag/v0.1.0
