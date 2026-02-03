@@ -57,7 +57,29 @@ Modern Windows application (WinUI 3) to install, uninstall, and update software 
 
 ## 🛠️ Installation
 
-> **Note:** PowerManager is currently in active development (v0.3.0). Pre-built installers are not yet available. You must build from source.
+### 📥 Download Release (Recommended)
+
+1. Go to [Releases](https://github.com/shuntps/PowerManager_Software/releases/latest)
+2. Download `PowerManager-v0.3.4-win-x64.zip` (⚠️ **not** individual .exe files)
+3. Extract the ZIP archive to a folder
+4. Run `PowerManager.UI.exe`
+
+**⚠️ Windows SmartScreen Warning**
+
+When running PowerManager for the first time, Windows Defender SmartScreen will block the app:
+
+> "Windows has protected your PC - Microsoft Defender SmartScreen prevented an unrecognized app from starting"
+
+**This is expected** - the app is not code-signed (code signing certificates cost $300-500/year).
+
+**To run the app:**
+
+1. Click **"More info"** in the SmartScreen popup
+2. Click **"Run anyway"**
+
+The app is open-source and built via GitHub Actions - you can [verify the code](https://github.com/shuntps/PowerManager_Software) yourself!
+
+> **Note:** PowerManager is currently in active development (v0.3.0). Pre-built installers (.msi/.msix) are planned for v1.0.0.
 
 ### 📦 Build from Source
 

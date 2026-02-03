@@ -53,20 +53,20 @@ if (Test-Path $changelogPath) {
     # Extract section for this version - improved regex to handle emoji sections
     # Match: ## [0.3.1] - 2026-02-03 ... until next ## [ or end of file
     $pattern = "## \[$([regex]::Escape($Version))\].*?\n([\s\S]*?)(?=\n## \[|\z)"
-    
+
     if ($changelog -match $pattern) {
         $releaseNotes = $matches[1].Trim()
-        
+
         # Remove empty lines at start/end
         $releaseNotes = $releaseNotes -replace '^\s+|\s+$', ''
-        
+
         if ([string]::IsNullOrWhiteSpace($releaseNotes)) {
             $releaseNotes = "Release $Version`n`nNo detailed changelog available for this version."
             Write-Host "Warning: Empty changelog section for v$Version, using default message" -ForegroundColor Yellow
         } else {
             Write-Host "Release notes extracted from CHANGELOG.md ($($releaseNotes.Length) chars)" -ForegroundColor Green
         }
-        
+
         Set-Content -Path $releaseNotesPath -Value $releaseNotes -NoNewline -Encoding UTF8
     } else {
         $releaseNotes = "Release $Version`n`nSee [CHANGELOG.md](CHANGELOG.md) for details."
@@ -124,16 +124,17 @@ $releaseArgs = @(
 )
 
 # Add artifacts if publish path exists
+# Only upload distribution packages (.zip, .msix), NOT individual .exe files
 if (Test-Path $PublishPath) {
-    $artifacts = Get-ChildItem $PublishPath -Recurse -File -Include *.zip, *.exe, *.msix
+    $artifacts = Get-ChildItem $PublishPath -Recurse -File -Include *.zip, *.msix
     if ($artifacts.Count -gt 0) {
-        Write-Host "Uploading $($artifacts.Count) artifact(s)..." -ForegroundColor Cyan
+        Write-Host "Uploading $($artifacts.Count) distribution package(s)..." -ForegroundColor Cyan
         $artifacts | ForEach-Object {
             $releaseArgs += $_.FullName
             Write-Host "  - $($_.Name) ($([math]::Round($_.Length/1MB, 2)) MB)" -ForegroundColor Gray
         }
     } else {
-        Write-Host "Warning: No artifacts found in $PublishPath" -ForegroundColor Yellow
+        Write-Host "Warning: No distribution packages found in $PublishPath" -ForegroundColor Yellow
         Write-Host "Release will be created without binary attachments" -ForegroundColor Yellow
     }
 } else {
