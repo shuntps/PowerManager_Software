@@ -86,7 +86,25 @@ jobs:
 
       - name: Publish application
         if: steps.check.outputs.skip == 'false'
-        run: dotnet publish src/PowerManager.UI/PowerManager.UI.csproj -c Release -r win-x64 --self-contained false -o publish/
+        shell: pwsh
+        run: |
+          Write-Host "Publishing PowerManager for win-x64..." -ForegroundColor Cyan
+
+          # Publish self-contained executable
+          dotnet publish src/PowerManager.UI/PowerManager.UI.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=false `
+            -p:PublishReadyToRun=true `
+            -o publish/win-x64
+
+          Write-Host "Build artifacts:" -ForegroundColor Green
+          Get-ChildItem publish/win-x64 -Filter *.exe | ForEach-Object { Write-Host "  - $($_.Name) ($([math]::Round($_.Length/1MB, 2)) MB)" }
+
+          # Create zip archive
+          Compress-Archive -Path publish/win-x64/* -DestinationPath publish/PowerManager-v${{ steps.version.outputs.version }}-win-x64.zip
+          Write-Host "Created archive: PowerManager-v${{ steps.version.outputs.version }}-win-x64.zip" -ForegroundColor Green
 
       - name: Create GitHub Release
         if: steps.check.outputs.skip == 'false'

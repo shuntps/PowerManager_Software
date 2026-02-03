@@ -111,14 +111,20 @@ $releaseArgs = @(
 
 # Add artifacts if publish path exists
 if (Test-Path $PublishPath) {
-    $artifacts = Get-ChildItem $PublishPath -Recurse -File
+    $artifacts = Get-ChildItem $PublishPath -Recurse -File -Include *.zip, *.exe, *.msix
     if ($artifacts.Count -gt 0) {
         Write-Host "Uploading $($artifacts.Count) artifact(s)..." -ForegroundColor Cyan
         $artifacts | ForEach-Object {
             $releaseArgs += $_.FullName
-            Write-Host "  - $($_.Name)" -ForegroundColor Gray
+            Write-Host "  - $($_.Name) ($([math]::Round($_.Length/1MB, 2)) MB)" -ForegroundColor Gray
         }
+    } else {
+        Write-Host "Warning: No artifacts found in $PublishPath" -ForegroundColor Yellow
+        Write-Host "Release will be created without binary attachments" -ForegroundColor Yellow
     }
+} else {
+    Write-Host "Warning: Publish path not found: $PublishPath" -ForegroundColor Yellow
+    Write-Host "Release will be created without binary attachments" -ForegroundColor Yellow
 }
 
 & gh @releaseArgs

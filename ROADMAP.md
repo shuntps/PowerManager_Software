@@ -2,14 +2,15 @@
 
 This document outlines the planned features and improvements for PowerManager Software. Our goal is to build the most user-friendly WinGet package manager for Windows.
 
-**Current Version:** v0.3.0  
+**Current Version:** v0.3.0
 **Last Updated:** February 2026
 
 ---
 
-## ?? Vision
+## 🎯 Vision
 
 PowerManager aims to simplify Windows software management by providing:
+
 - **Intuitive UI** for WinGet package management
 - **Bulk operations** for efficient multi-package workflows
 - **Smart automation** for updates and installations
@@ -17,41 +18,45 @@ PowerManager aims to simplify Windows software management by providing:
 
 ---
 
-## ? Completed Milestones
+## ✅ Completed Milestones
 
 ### v0.1.0 - Foundation (Released)
-- ? Basic package management via WinGet
-- ? Execution queue with status tracking
-- ? Install/Uninstall operations
-- ? Comprehensive logging with [LoggerMessage]
-- ? Async/await architecture
-- ? MVVM pattern with source generators
+
+- ✅ Basic package management via WinGet
+- ✅ Execution queue with status tracking
+- ✅ Install/Uninstall operations
+- ✅ Comprehensive logging with [LoggerMessage]
+- ✅ Async/await architecture
+- ✅ MVVM pattern with source generators
 
 ### v0.3.0 - Private Catalog (Current)
-- ? Private YAML catalog with 5 default apps
-- ? Real-time search and category filtering
-- ? Status badges (Installed/Update Available/Not Installed)
-- ? Optimized per-package scanning with progress overlay
-- ? Dual catalog system (default + custom YAML)
-- ? Installation detection with LastChecked timestamp
-- ? Source detection (winget/msstore)
-- ? Robust WinGet output parsing
+
+- ✅ Private YAML catalog with 5 default apps
+- ✅ Real-time search and category filtering
+- ✅ Status badges (Installed/Update Available/Not Installed)
+- ✅ Optimized per-package scanning with progress overlay
+- ✅ Dual catalog system (default + custom YAML)
+- ✅ Installation detection with LastChecked timestamp
+- ✅ Source detection (winget/msstore)
+- ✅ Robust WinGet output parsing
 
 ---
 
-## ?? Upcoming Releases
+## 🚀 Upcoming Releases
 
-### v0.4.0 - Enhanced Catalog (Next - Q1 2025)
+### v0.4.0 - Enhanced Catalog (Next - Q1 2026)
 
 **Focus:** Expand catalog and improve user experience
 
 **Success Metrics:**
-- ?? Catalog contains 40+ curated applications
-- ? Catalog load time <500ms with caching
-- ?? User can add/remove custom packages via UI
-- ?? "Update All" reduces update time by 70%
+
+- 📊 Catalog contains 40+ curated applications
+- ⚡ Catalog load time <500ms with caching
+- 🎯 User can add/remove custom packages via UI
+- 📈 "Update All" reduces update time by 70%
 
 #### Features
+
 - [ ] **Smart Splash Screen**
   - WinGet verification on startup
   - Installation check and auto-repair
@@ -94,6 +99,7 @@ PowerManager aims to simplify Windows software management by providing:
 **Focus:** Stability, testing, and error handling
 
 #### Features
+
 - [ ] **Bulk Operations**
   - Multi-select install/uninstall
   - Batch operation confirmation dialog
@@ -134,6 +140,7 @@ PowerManager aims to simplify Windows software management by providing:
 **Focus:** Power user features and customization
 
 #### Features
+
 - [ ] **Predefined Application Packs**
   - Developer Pack (Git, VS Code, Node.js, Docker, Postman)
   - Office Pack (LibreOffice, PDF readers, note-taking apps)
@@ -171,6 +178,7 @@ PowerManager aims to simplify Windows software management by providing:
 **Focus:** Multi-language support and localization
 
 #### Features
+
 - [ ] **Multi-Language Support**
   - English (default)
   - French
@@ -202,6 +210,7 @@ PowerManager aims to simplify Windows software management by providing:
 **Focus:** Smart automation and self-updating
 
 #### Features
+
 - [ ] **Automatic PowerManager Updates**
   - Self-update mechanism
   - Background download
@@ -231,7 +240,7 @@ PowerManager aims to simplify Windows software management by providing:
 
 ---
 
-## ?? Future Ideas (Beyond v2.0)
+## 💡 Future Ideas (Beyond v2.0)
 
 These are ideas under consideration but not yet scheduled:
 
@@ -248,42 +257,42 @@ These are ideas under consideration but not yet scheduled:
 
 ---
 
-## ?? Feature Voting
+## 🗳️ Feature Voting
 
 Want a feature prioritized? Vote on [GitHub Discussions](https://github.com/shuntps/PowerManager_Software/discussions)!
 
 ---
 
-## ?? Contributing to the Roadmap
+## 🤝 Contributing to the Roadmap
 
 Have ideas? We'd love to hear them!
 
-- ?? **Suggest features** - Open a Discussion on GitHub
-- ?? **Report bugs** - Help us improve quality
-- ?? **Improve docs** - Clarify roadmap items
-- ?? **Submit PRs** - Implement planned features
+- 💡 **Suggest features** - Open a Discussion on GitHub
+- 🐛 **Report bugs** - Help us improve quality
+- 📝 **Improve docs** - Clarify roadmap items
+- 🔧 **Submit PRs** - Implement planned features
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+See [.github/copilot-instructions.md](.github/copilot-instructions.md) for coding guidelines and conventions.
 
 ---
 
-## ?? Release Schedule
+## 📅 Release Schedule
 
 We aim for **quarterly major releases** with monthly patch updates:
 
-| Version | Target Date | Focus                  |
-| ------- | ----------- | ---------------------- |
-| v0.4.0  | March 2026  | Enhanced Catalog       |
-| v1.0.0  | June 2026   | Production Ready       |
-| v1.1.0  | Sept 2026   | Advanced Features      |
-| v1.2.0  | Dec 2026    | Internationalization   |
+| Version | Target Date | Focus                     |
+| ------- | ----------- | ------------------------- |
+| v0.4.0  | March 2026  | Enhanced Catalog          |
+| v1.0.0  | June 2026   | Production Ready          |
+| v1.1.0  | Sept 2026   | Advanced Features         |
+| v1.2.0  | Dec 2026    | Internationalization      |
 | v2.0.0  | Q2 2027     | Automation & Intelligence |
 
 **Note:** Dates are estimates and may shift based on complexity and community contributions.
 
 ---
 
-**Last Updated:** February 3, 2026  
+**Last Updated:** February 3, 2026
 **Next Review:** March 2026
 
 For questions or feedback, open a [GitHub Discussion](https://github.com/shuntps/PowerManager_Software/discussions).

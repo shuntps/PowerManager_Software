@@ -73,6 +73,7 @@ public partial class QueueService(ILogger<QueueService> logger, IWingetService w
                     }
 
                     item.Status = QueueItemStatus.Completed;
+                    ItemCompleted?.Invoke(this, item);
                 }
                 catch (OperationCanceledException)
                 {
