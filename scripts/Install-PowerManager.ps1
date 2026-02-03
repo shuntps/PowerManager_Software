@@ -40,6 +40,8 @@ param(
     [switch]$SkipLaunch
 )
 
+# Fail fast on errors for critical operations (certificate install, MSIX deployment)
+# Non-critical operations (like auto-launch) are wrapped in try/catch for graceful degradation
 $ErrorActionPreference = "Stop"
 
 # ============================================================================
@@ -89,10 +91,16 @@ function Find-MsixFile {
     }
 
     $selection = Read-Host "`nSelect package to install (1-$($msixFiles.Count))"
+
+    # Validate numeric input
+    if (-not [int]::TryParse($selection, [ref]$null)) {
+        throw "Invalid input: please enter a number between 1 and $($msixFiles.Count)"
+    }
+
     $index = [int]$selection - 1
 
     if ($index -lt 0 -or $index -ge $msixFiles.Count) {
-        throw "Invalid selection"
+        throw "Invalid selection: must be between 1 and $($msixFiles.Count)"
     }
 
     return $msixFiles[$index].FullName
@@ -109,6 +117,10 @@ function Extract-CertificateFromMsix {
 
         if ($signature.Status -ne "Valid" -and $signature.Status -ne "UnknownError") {
             throw "MSIX package is not signed or signature is invalid: $($signature.Status)"
+        }
+
+        if ($signature.Status -eq "UnknownError") {
+            Write-Host "   ⚠️  Signature status is UnknownError (certificate chain unverified)" -ForegroundColor Yellow
         }
 
         $cert = $signature.SignerCertificate

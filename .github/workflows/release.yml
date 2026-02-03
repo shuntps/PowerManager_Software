@@ -75,7 +75,8 @@ jobs:
           Write-Host "Updating Package.appxmanifest to version $msixVersion..." -ForegroundColor Cyan
 
           $manifest = Get-Content $manifestPath -Raw
-          $manifest = $manifest -replace 'Version="[\d\.]+"', "Version=`"$msixVersion`""
+          # Target only the Identity element's Version attribute to avoid matching MinVersion/MaxVersionTested
+          $manifest = $manifest -replace '(<Identity[^>]+Version=")[\d\.]+"', "`${1}$msixVersion`""
           $manifest | Set-Content $manifestPath -NoNewline
 
           Write-Host "  ✓ Manifest updated" -ForegroundColor Green
@@ -272,10 +273,10 @@ jobs:
 
           # Create bundle
           $makeappxArgs = @("bundle", "/f", $mappingFile, "/p", $bundlePath, "/o")
-          & $makeappx @makeappxArgs
+          $makeappxOutput = & $makeappx @makeappxArgs 2>&1
 
           if ($LASTEXITCODE -ne 0) {
-            Write-Error "makeappx bundle failed with exit code $LASTEXITCODE"
+            Write-Error "makeappx bundle failed with exit code $LASTEXITCODE`n$makeappxOutput"
             exit 1
           }
 
@@ -288,10 +289,10 @@ jobs:
 
           $certPwd = $env:CERT_PASSWORD
           $signtoolArgs = @("sign", "/fd", "SHA256", "/a", "/f", "src/PowerManager.UI/PowerManager_TemporaryKey.pfx", "/p", $certPwd, $bundlePath)
-          & $signtoolPath @signtoolArgs
+          $signtoolOutput = & $signtoolPath @signtoolArgs 2>&1
 
           if ($LASTEXITCODE -ne 0) {
-            Write-Error "signtool sign failed with exit code $LASTEXITCODE"
+            Write-Error "signtool sign failed with exit code $LASTEXITCODE`n$signtoolOutput"
             exit 1
           }
 
