@@ -10,34 +10,33 @@ namespace PowerManager.UI;
 
 public partial class MainWindow : Window
 {
-	public MainWindow()
-	{
-		this.InitializeComponent();
-        
-        var dispatcher = ((App)App.Current).Services.GetRequiredService<IUiDispatcher>();
-        if (dispatcher is UiDispatcher uiDispatcher)
+    public MainWindow()
+    {
+        InitializeComponent();
+
+        if (((App)App.Current).Services.GetRequiredService<IUiDispatcher>() is UiDispatcher dispatcher)
         {
-            uiDispatcher.Initialize(this.DispatcherQueue);
+            dispatcher.Initialize(DispatcherQueue);
         }
-        
-        NavView.Loaded += (s, e) => 
-        {
-            NavView.SelectedItem = NavView.MenuItems[0];
-        };
-	}
+
+        NavView.Loaded += (_, _) => NavView.SelectedItem = NavView.MenuItems[0];
+    }
 
     private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
-        if (args.SelectedItem is NavigationViewItem item)
-        {
-            Type? pageType = null;
-            if (item.Tag?.ToString() == "CatalogPage") pageType = typeof(CatalogPage);
-            else if (item.Tag?.ToString() == "QueuePage") pageType = typeof(QueuePage);
+        if (args.SelectedItem is not NavigationViewItem item)
+            return;
 
-            if (pageType != null && ContentFrame.CurrentSourcePageType != pageType)
-            {
-                ContentFrame.Navigate(pageType);
-            }
+        var pageType = item.Tag?.ToString() switch
+        {
+            "CatalogPage" => typeof(CatalogPage),
+            "QueuePage" => typeof(QueuePage),
+            _ => null
+        };
+
+        if (pageType is not null && ContentFrame.CurrentSourcePageType != pageType)
+        {
+            ContentFrame.Navigate(pageType);
         }
     }
 }
