@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PowerManager.Core.Models;
 using PowerManager.Core.Enums;
@@ -13,7 +8,7 @@ public partial class QueueService(ILogger<QueueService> logger, IWingetService w
 {
     private readonly List<QueueItem> _queue = [];
     private readonly SemaphoreSlim _semaphore = new(1, 1);
-    
+
     public event EventHandler<QueueItem>? ItemStatusChanged;
     public event EventHandler<QueueItem>? ItemAdded;
 
@@ -66,7 +61,7 @@ public partial class QueueService(ILogger<QueueService> logger, IWingetService w
                 try
                 {
                     LogStartingAction(logger, item.Action, item.PackageId);
-                    
+
                     if (item.Action.Equals("Install", StringComparison.OrdinalIgnoreCase))
                     {
                         await wingetService.InstallPackageAsync(item.PackageId, item.CancellationTokenSource.Token);

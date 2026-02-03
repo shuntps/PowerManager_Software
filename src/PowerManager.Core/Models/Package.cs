@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace PowerManager.Core.Models;
 
 public class Package
@@ -10,7 +8,7 @@ public class Package
     public string Source { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public bool IsInstalled { get; set; }
-    
+
     // For serialization compatibility
     public Package() { }
 }

@@ -2,6 +2,8 @@
 
 ![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)
 ![WinUI 3](https://img.shields.io/badge/WinUI-3-0078D4?logo=windows)
+![Version](https://img.shields.io/github/v/release/shuntps/PowerManager_Software)
+![Build](https://img.shields.io/github/actions/workflow/status/shuntps/PowerManager_Software/release.yml?branch=main&label=build)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 Modern Windows application (WinUI 3) to install, uninstall, and update software in bulk via WinGet.
@@ -226,9 +228,51 @@ A: Catalog functionality is planned but not yet implemented in v0.1.0. The app c
 **Q: How does the status cache work?**
 A: Status caching is planned for future releases to avoid repeated WinGet calls and improve performance.
 
-## 🗺️ Roadmap
+## � Versioning & Releases
 
-### Version 0.2 (Next)
+PowerManager follows [Semantic Versioning](https://semver.org/) with automated releases.
+
+### Version Format
+
+**MAJOR.MINOR.PATCH** (e.g., `1.2.3`)
+
+- **MAJOR**: Breaking changes (incompatible API changes)
+- **MINOR**: New features (backward compatible)
+- **PATCH**: Bug fixes (backward compatible)
+
+### Automated Releases
+
+Every commit to `main` is analyzed for version bumping:
+
+| Commit Type                    | Version Bump | Example           |
+| ------------------------------ | ------------ | ----------------- |
+| `feat:`                        | MINOR        | `0.1.0` → `0.2.0` |
+| `fix:`                         | PATCH        | `0.1.0` → `0.1.1` |
+| `perf:`                        | PATCH        | `0.1.0` → `0.1.1` |
+| `feat!:` or `BREAKING CHANGE:` | MAJOR        | `0.1.0` → `1.0.0` |
+| `docs:`, `chore:`, `style:`    | No release   | No change         |
+
+**GitHub Actions automatically:**
+
+- ✅ Calculates the next version
+- ✅ Updates `VERSION.txt` and `CHANGELOG.md`
+- ✅ Builds and tests the project
+- ✅ Creates a GitHub Release with binaries
+- ✅ Publishes release notes
+
+See [CHANGELOG.md](CHANGELOG.md) for complete version history.
+
+### Release Assets
+
+Each release includes:
+
+- Compiled binaries (x64, self-contained)
+- Installer packages (.msix)
+- Full changelog and release notes
+
+## �🗺️ Roadmap
+
+### Version 0.4 (Next)
 
 - [ ] Splash screen with WinGet verification
 - [ ] Application catalog (40+ pre-configured apps)
@@ -275,14 +319,51 @@ A: Status caching is planned for future releases to avoid repeated WinGet calls 
 - 📝 **Improve docs** - Fix typos, add examples, translate content
 - 🔧 **Submit PRs** - Fix bugs, implement features, refactor code
 
+### Commit Message Format
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) for automated versioning:
+
+```bash
+<type>(<scope>): <description>
+
+# Examples
+feat(catalog): add package search functionality
+fix(queue): prevent duplicate items in queue
+docs: update installation instructions
+chore: upgrade dependencies
+```
+
+**Valid types:**
+
+- `feat`: New feature (triggers MINOR release)
+- `fix`: Bug fix (triggers PATCH release)
+- `perf`: Performance improvement (triggers PATCH release)
+- `docs`: Documentation only (no release)
+- `style`: Code formatting (no release)
+- `refactor`: Code restructuring (no release)
+- `test`: Adding tests (no release)
+- `chore`: Maintenance tasks (no release)
+- `ci`: CI/CD changes (no release)
+
+**Breaking changes** (triggers MAJOR release):
+
+```bash
+feat!: redesign plugin system
+
+BREAKING CHANGE: Plugin API has been completely redesigned
+```
+
+See [docs/SEMANTIC_RELEASE_GUIDE.md](docs/SEMANTIC_RELEASE_GUIDE.md) for complete documentation.
+
 ### Development Workflow
 
 1. Fork the project
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
 3. Follow the coding guidelines in `.github/copilot-instructions.md`
-4. Commit your changes (`git commit -m 'Add AmazingFeature'`)
-5. Push to your branch (`git push origin feature/AmazingFeature`)
-6. Open a Pull Request with a clear description
+4. **Use conventional commits** for all changes
+5. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+6. Push to your branch (`git push origin feature/AmazingFeature`)
+7. Open a Pull Request with a clear description
 
 ### Known Issues
 

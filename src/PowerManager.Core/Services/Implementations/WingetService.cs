@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PowerManager.Core.Models;
 
@@ -80,7 +76,7 @@ public partial class WingetService(ILogger<WingetService> logger) : IWingetServi
         process.OutputDataReceived += (sender, e) => { if (e.Data != null) outputBuilder.AppendLine(e.Data); };
         process.ErrorDataReceived += (sender, e) => { if (e.Data != null) errorBuilder.AppendLine(e.Data); };
 
-        try 
+        try
         {
             process.Start();
             process.BeginOutputReadLine();

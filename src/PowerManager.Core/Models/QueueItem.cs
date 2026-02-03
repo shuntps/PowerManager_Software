@@ -1,6 +1,4 @@
-using System;
 using System.Text;
-using System.Threading;
 using PowerManager.Core.Enums;
 
 namespace PowerManager.Core.Models;
@@ -12,7 +10,7 @@ public class QueueItem
     public QueueItemStatus Status { get; set; } = QueueItemStatus.Pending;
     public double Progress { get; set; }
     public StringBuilder Logs { get; set; } = new StringBuilder();
-    
+
     // Non-serialized runtime properties
     public CancellationTokenSource? CancellationTokenSource { get; set; }
 
