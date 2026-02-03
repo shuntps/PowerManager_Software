@@ -1,3 +1,9 @@
+## [0.2.0] - 2026-02-03
+
+### ✨ Features
+- add automated versioning system with PowerShell scripts
+
+
 # Changelog
 
 All notable changes to PowerManager will be documented in this file.
