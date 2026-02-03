@@ -11,16 +11,29 @@
 ```bash
 <type>(<scope>): <description>
 
-# Version-affecting commits
+# ✅ Version-affecting commits (create releases)
 feat(catalog): add search → MINOR bump (0.1.0 → 0.2.0)
 fix(queue): deadlock issue → PATCH bump (0.1.0 → 0.1.1)
+perf(core): optimize search → PATCH bump (0.1.0 → 0.1.1)
 feat!: redesign API → MAJOR bump (0.1.0 → 1.0.0)
 
-# Non-version commits (no release)
+# ❌ Non-version commits (no release, infrastructure only)
+chore(ci): optimize workflow
+chore(deps): upgrade packages
 docs: update README
-chore: upgrade dependencies
 style: format code
+refactor: restructure services
+test: add unit tests
+build: update build scripts
+ci: fix GitHub Actions
 ```
+
+**CRITICAL**: Use `chore:` for workflow/build/dependency changes that don't affect the app!
+
+- ✅ `chore(ci):` = Workflow optimizations (no new release)
+- ✅ `chore(deps):` = Dependency updates without features (no new release)
+- ❌ `perf(ci):` = WRONG, creates unnecessary release for infrastructure
+- ❌ `fix(build):` = WRONG, creates unnecessary release for build scripts
 
 **GitHub Actions fully automates releases on `main` branch:**
 
