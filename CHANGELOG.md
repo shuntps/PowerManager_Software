@@ -1,3 +1,23 @@
+## [0.3.3] - 2026-02-03
+
+### ⚠️ BREAKING CHANGES
+feat(catalog): implement private YAML catalog with real-time scanning and auto-refresh
+
+### ✨ Features
+- implement private YAML catalog with real-time scanning and auto-refresh
+- add automated versioning system with PowerShell scripts
+
+### 🐛 Bug Fixes
+- improve changelog extraction regex in New-Release.ps1
+- publish self-contained executable in GitHub releases
+
+### ⚡ Performance Improvements
+- remove duplicate build/test on main branch
+
+### 📚 Documentation
+- update README with versioning section and enhance copilot instructions
+
+
 ## [0.3.2] - 2026-02-03
 
 ### ⚠️ BREAKING CHANGES
