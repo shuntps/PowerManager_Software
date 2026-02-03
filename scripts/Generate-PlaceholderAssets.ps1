@@ -35,11 +35,11 @@ Add-Type -AssemblyName System.Drawing
 
 foreach ($asset in $assets) {
     $filePath = Join-Path $assetsPath $asset.Name
-    
+
     # Create bitmap
     $bitmap = New-Object System.Drawing.Bitmap $asset.Width, $asset.Height
     $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
-    
+
     # Fill background (blue gradient)
     $brush = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
         (New-Object System.Drawing.Point 0, 0),
@@ -48,26 +48,26 @@ foreach ($asset in $assets) {
         [System.Drawing.Color]::FromArgb(0, 90, 158)    # Darker blue
     )
     $graphics.FillRectangle($brush, 0, 0, $asset.Width, $asset.Height)
-    
+
     # Draw "PM" text in center
     $font = New-Object System.Drawing.Font("Segoe UI", [Math]::Max(12, $asset.Height / 5), [System.Drawing.FontStyle]::Bold)
     $textBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::White)
     $format = New-Object System.Drawing.StringFormat
     $format.Alignment = [System.Drawing.StringAlignment]::Center
     $format.LineAlignment = [System.Drawing.StringAlignment]::Center
-    
+
     $rect = New-Object System.Drawing.RectangleF 0, 0, $asset.Width, $asset.Height
     $graphics.DrawString("PM", $font, $textBrush, $rect, $format)
-    
+
     # Save as PNG
     $bitmap.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
-    
+
     # Cleanup
     $graphics.Dispose()
     $bitmap.Dispose()
     $font.Dispose()
     $textBrush.Dispose()
-    
+
     Write-Host "  ✓ Created $($asset.Name) ($($asset.Width)x$($asset.Height))" -ForegroundColor Green
 }
 

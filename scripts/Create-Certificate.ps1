@@ -76,16 +76,16 @@ if (-not $Password) {
     $Password = Read-Host -AsSecureString
     Write-Host "🔐 Confirm password:" -ForegroundColor Cyan
     $PasswordConfirm = Read-Host -AsSecureString
-    
+
     # Compare SecureStrings
     $pwd1 = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password))
     $pwd2 = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($PasswordConfirm))
-    
+
     if ($pwd1 -ne $pwd2) {
         Write-Error "Passwords do not match"
         exit 1
     }
-    
+
     if ($pwd1.Length -lt 8) {
         Write-Error "Password must be at least 8 characters"
         exit 1
@@ -104,30 +104,30 @@ try {
         -CertStoreLocation "Cert:\CurrentUser\My" `
         -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}") `
         -NotAfter (Get-Date).AddYears($ValidYears)
-    
+
     Write-Host "   ✓ Certificate created successfully" -ForegroundColor Green
     Write-Host "   ℹ️  Thumbprint: $($cert.Thumbprint)" -ForegroundColor Gray
     Write-Host "   ℹ️  Valid until: $($cert.NotAfter.ToString('yyyy-MM-dd'))" -ForegroundColor Gray
-    
+
     # Export to .pfx file
     $pfxFileName = "PowerManager_TemporaryKey.pfx"
     $pfxPath = Join-Path $ExportPath $pfxFileName
-    
+
     # Ensure export directory exists
     if (-not (Test-Path $ExportPath)) {
         New-Item -ItemType Directory -Path $ExportPath -Force | Out-Null
     }
-    
+
     Write-Host "`n📤 Exporting certificate to .pfx file..." -ForegroundColor Cyan
-    
+
     Export-PfxCertificate `
         -Cert $cert `
         -FilePath $pfxPath `
         -Password $Password | Out-Null
-    
+
     Write-Host "   ✓ Certificate exported to: $pfxPath" -ForegroundColor Green
     Write-Host "   ℹ️  File size: $([math]::Round((Get-Item $pfxPath).Length/1KB, 2)) KB" -ForegroundColor Gray
-    
+
     # Display next steps
     Write-Host "`n✅ Certificate created successfully!" -ForegroundColor Green
     Write-Host ""
@@ -147,7 +147,7 @@ try {
     Write-Host "  • Users must install certificate manually OR use Install-PowerManager.ps1" -ForegroundColor Yellow
     Write-Host "  • For production, purchase commercial code signing certificate (~\$300/year)" -ForegroundColor Yellow
     Write-Host ""
-    
+
     # Check if .gitignore excludes .pfx files
     $gitignorePath = Join-Path (Split-Path $PSScriptRoot) ".gitignore"
     if (Test-Path $gitignorePath) {

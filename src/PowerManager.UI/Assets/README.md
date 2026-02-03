@@ -24,6 +24,7 @@ Currently using placeholder images. For production release, replace with proper 
 
 Current placeholders are generated programmatically during build.
 For v0.4.0 release, proper icons should be designed using:
+
 - Adobe Illustrator / Figma (vector)
 - Export to PNG at required sizes
 - Optimize with ImageOptim/TinyPNG
