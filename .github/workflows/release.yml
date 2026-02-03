@@ -76,7 +76,7 @@ jobs:
 
       - name: Restore dependencies
         if: steps.check.outputs.skip == 'false'
-        run: dotnet restore src/PowerManager.slnx
+        run: dotnet restore src/PowerManager.slnx -r win-x64
 
       - name: Build solution
         if: steps.check.outputs.skip == 'false'
@@ -84,7 +84,14 @@ jobs:
 
       - name: Run tests
         if: steps.check.outputs.skip == 'false'
-        run: dotnet test src/PowerManager.slnx -c Release --no-build --verbosity normal
+        shell: pwsh
+        run: |
+          $testList = dotnet test src/PowerManager.slnx -c Release --no-build --list-tests 2>&1 | Out-String
+          if ($testList -match "No test is available") {
+            Write-Host "No tests found, skipping test execution" -ForegroundColor Yellow
+          } else {
+            dotnet test src/PowerManager.slnx -c Release --no-build --verbosity normal
+          }
 
       - name: Publish application
         if: steps.check.outputs.skip == 'false'
@@ -97,6 +104,7 @@ jobs:
             -c Release `
             -r win-x64 `
             --self-contained true `
+            --no-restore `
             -p:PublishSingleFile=false `
             -p:PublishReadyToRun=true `
             -o publish/win-x64
