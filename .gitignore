@@ -48,6 +48,22 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
+# ============================================================================
+# PowerManager-specific files
+# ============================================================================
+
+# MSIX certificates (NEVER commit!)
+*.pfx
+*.cer
+PowerManager_TemporaryKey.*
+
+# Published builds
+publish/
+AppPackages/
+
+# Release notes temporary files
+RELEASE_NOTES.md
+
 # VS Code directories
 .vscode/
 
