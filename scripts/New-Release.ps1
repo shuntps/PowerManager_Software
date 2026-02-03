@@ -50,15 +50,29 @@ $releaseNotesPath = "$PSScriptRoot\..\RELEASE_NOTES.md"
 if (Test-Path $changelogPath) {
     $changelog = Get-Content $changelogPath -Raw
 
-    # Extract section for this version
-    if ($changelog -match "## \[$Version\].*?\n(.*?)(?=\n## \[|$)") {
+    # Extract section for this version - improved regex to handle emoji sections
+    # Match: ## [0.3.1] - 2026-02-03 ... until next ## [ or end of file
+    $pattern = "## \[$([regex]::Escape($Version))\].*?\n([\s\S]*?)(?=\n## \[|\z)"
+    
+    if ($changelog -match $pattern) {
         $releaseNotes = $matches[1].Trim()
-        Set-Content -Path $releaseNotesPath -Value $releaseNotes -NoNewline
-        Write-Host "Release notes extracted from CHANGELOG.md" -ForegroundColor Green
+        
+        # Remove empty lines at start/end
+        $releaseNotes = $releaseNotes -replace '^\s+|\s+$', ''
+        
+        if ([string]::IsNullOrWhiteSpace($releaseNotes)) {
+            $releaseNotes = "Release $Version`n`nNo detailed changelog available for this version."
+            Write-Host "Warning: Empty changelog section for v$Version, using default message" -ForegroundColor Yellow
+        } else {
+            Write-Host "Release notes extracted from CHANGELOG.md ($($releaseNotes.Length) chars)" -ForegroundColor Green
+        }
+        
+        Set-Content -Path $releaseNotesPath -Value $releaseNotes -NoNewline -Encoding UTF8
     } else {
-        $releaseNotes = "Release $Version"
-        Set-Content -Path $releaseNotesPath -Value $releaseNotes -NoNewline
-        Write-Host "Warning: Could not extract release notes from CHANGELOG" -ForegroundColor Yellow
+        $releaseNotes = "Release $Version`n`nSee [CHANGELOG.md](CHANGELOG.md) for details."
+        Set-Content -Path $releaseNotesPath -Value $releaseNotes -NoNewline -Encoding UTF8
+        Write-Host "Warning: Could not find section [v$Version] in CHANGELOG" -ForegroundColor Yellow
+        Write-Host "Using default release notes" -ForegroundColor Yellow
     }
 } else {
     Write-Error "CHANGELOG.md not found"
