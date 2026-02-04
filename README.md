@@ -43,7 +43,7 @@ Modern Windows application (WinUI 3) to install, uninstall, and update software 
 
 ### For Execution
 
-- **Windows 10/11** (version 1809 minimum)
+- **Windows 10/11** (version 1809 minimum))
 - **WinGet** installed (included by default on Windows 11)
 - **Microsoft Edge WebView2 Runtime**
 
