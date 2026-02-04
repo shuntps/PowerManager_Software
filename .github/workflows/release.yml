@@ -20,7 +20,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Use PAT if you need to trigger other workflows, otherwise GITHUB_TOKEN is sufficient
+          token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
 
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v4
@@ -302,5 +303,7 @@ jobs:
       - name: Create GitHub Release
         if: steps.check.outputs.skip == 'false'
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           .\scripts\New-Release.ps1 -Version "${{ steps.version.outputs.version }}" -PublishPath "publish"
